@@ -12,7 +12,7 @@
 
 /**
  * This sample demonstrates how to list objects under a specified folder of a bucket
- * from oss using the oss SDK for Go.
+ * from OSS using the OSS SDK for Go.
  */
 package examples
 
@@ -78,7 +78,7 @@ func (sample ListObjectsInFolderSample) PrepareFoldersAndObjects() {
 	}
 
 	// Insert 2 objects in each folder
-	input.Body = strings.NewReader("Hello oss")
+	input.Body = strings.NewReader("Hello OSS")
 	listObjectsInput := &OSS.ListObjectsInput{}
 	listObjectsInput.Bucket = sample.bucketName
 	output, err := sample.OSSClient.ListObjects(listObjectsInput)

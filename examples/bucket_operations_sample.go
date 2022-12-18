@@ -13,7 +13,7 @@
 /**
  * This sample demonstrates how to do bucket-related operations
  * (such as do bucket ACL/CORS/Lifecycle/Logging/Website/Location/Tagging)
- * on oss using the oss SDK for Go.
+ * on OSS using the OSS SDK for Go.
  */
 package examples
 
@@ -164,7 +164,7 @@ func (sample BucketOperationsSample) DoBucketCorsOperation() {
 	corsRule0.AllowedMethod = []string{"GET", "PUT", "POST", "HEAD"}
 	corsRule0.AllowedHeader = []string{"header1", "header2"}
 	corsRule0.MaxAgeSeconds = 100
-	corsRule0.ExposeHeader = []string{"oss-1", "oss-2"}
+	corsRule0.ExposeHeader = []string{"OSS-1", "OSS-2"}
 	corsRules[0] = corsRule0
 	corsRule1 := OSS.CorsRule{}
 
@@ -173,7 +173,7 @@ func (sample BucketOperationsSample) DoBucketCorsOperation() {
 	corsRule1.AllowedMethod = []string{"GET", "PUT", "POST", "HEAD"}
 	corsRule1.AllowedHeader = []string{"header3", "header4"}
 	corsRule1.MaxAgeSeconds = 50
-	corsRule1.ExposeHeader = []string{"oss-3", "oss-4"}
+	corsRule1.ExposeHeader = []string{"OSS-3", "OSS-4"}
 	corsRules[1] = corsRule1
 	input.CorsRules = corsRules[:]
 	// Setting bucket CORS

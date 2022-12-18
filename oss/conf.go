@@ -10,7 +10,7 @@
 // CONDITIONS OF ANY KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations under the License.
 
-package oss
+package OSS
 
 import (
 	"context"
@@ -393,7 +393,7 @@ func (conf *config) prepareBaseURL(bucketName string) (requestURL string, canoni
 				canonicalizedURL = "/" + bucketName
 			} else {
 				requestURL = fmt.Sprintf("%s://%s.%s:%d", urlHolder.scheme, bucketName, urlHolder.host, urlHolder.port)
-				if conf.signature == "v2" || conf.signature == "oss" {
+				if conf.signature == "v2" || conf.signature == "OSS" {
 					canonicalizedURL = "/" + bucketName + "/"
 				} else {
 					canonicalizedURL = "/"

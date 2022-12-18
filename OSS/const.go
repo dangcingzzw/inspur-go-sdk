@@ -10,25 +10,25 @@
 // CONDITIONS OF ANY KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations under the License.
 
-package oss
+package OSS
 
 const (
 	OSS_SDK_VERSION        = "3.22.11"
-	USER_AGENT             = "oss-sdk-go/" + OSS_SDK_VERSION
+	USER_AGENT             = "OSS-sdk-go/" + OSS_SDK_VERSION
 	HEADER_PREFIX          = "x-amz-"
 	HEADER_PREFIX_META     = "x-amz-meta-"
-	HEADER_PREFIX_OSS      = "x-oss-"
-	HEADER_PREFIX_META_OSS = "x-oss-meta-"
+	HEADER_PREFIX_OSS      = "x-OSS-"
+	HEADER_PREFIX_META_OSS = "x-OSS-meta-"
 	HEADER_DATE_AMZ        = "x-amz-date"
-	HEADER_DATE_OSS        = "x-oss-date"
+	HEADER_DATE_OSS        = "x-OSS-date"
 	HEADER_STS_TOKEN_AMZ   = "x-amz-security-token"
-	HEADER_STS_TOKEN_OSS   = "x-oss-security-token"
+	HEADER_STS_TOKEN_OSS   = "x-OSS-security-token"
 	HEADER_ACCESSS_KEY_AMZ = "AWSAccessKeyId"
 	PREFIX_META            = "meta-"
 
 	HEADER_CONTENT_SHA256_AMZ               = "x-amz-content-sha256"
 	HEADER_ACL_AMZ                          = "x-amz-acl"
-	HEADER_ACL_OSS                          = "x-oss-acl"
+	HEADER_ACL_OSS                          = "x-OSS-acl"
 	HEADER_ACL                              = "acl"
 	HEADER_LOCATION_AMZ                     = "location"
 	HEADER_BUCKET_LOCATION_OSS              = "bucket-location"
@@ -36,8 +36,8 @@ const (
 	HEADER_COPY_SOURCE_RANGE                = "copy-source-range"
 	HEADER_RANGE                            = "Range"
 	HEADER_STORAGE_CLASS                    = "x-default-storage-class"
-	HEADER_STORAGE_CLASS_OSS                = "x-oss-storage-class"
-	HEADER_FS_FILE_INTERFACE_OSS            = "x-oss-fs-file-interface"
+	HEADER_STORAGE_CLASS_OSS                = "x-OSS-storage-class"
+	HEADER_FS_FILE_INTERFACE_OSS            = "x-OSS-fs-file-interface"
 	HEADER_MODE                             = "mode"
 	HEADER_VERSION_OSS                      = "version"
 	HEADER_REQUEST_PAYER                    = "x-amz-request-payer"
@@ -62,7 +62,7 @@ const (
 	HEADER_WEBSITE_REDIRECT_LOCATION        = "website-redirect-location"
 	HEADER_METADATA_DIRECTIVE               = "metadata-directive"
 	HEADER_EXPIRATION                       = "expiration"
-	HEADER_EXPIRES_OSS                      = "x-oss-expires"
+	HEADER_EXPIRES_OSS                      = "x-OSS-expires"
 	HEADER_RESTORE                          = "restore"
 	HEADER_OBJECT_TYPE                      = "object-type"
 	HEADER_NEXT_APPEND_POSITION             = "next-append-position"
@@ -105,7 +105,7 @@ const (
 
 	HEADER_SSEKMS_KEY_AMZ = "x-amz-server-side-encryption-aws-kms-key-id"
 
-	HEADER_SSEKMS_KEY_OSS = "x-oss-server-side-encryption-kms-key-id"
+	HEADER_SSEKMS_KEY_OSS = "x-OSS-server-side-encryption-kms-key-id"
 
 	HEADER_SUCCESS_ACTION_REDIRECT = "success_action_redirect"
 
@@ -140,7 +140,7 @@ const (
 	PARAM_ALGORITHM_AMZ_CAMEL     = "X-Amz-Algorithm"
 	PARAM_CREDENTIAL_AMZ_CAMEL    = "X-Amz-Credential"
 	PARAM_DATE_AMZ_CAMEL          = "X-Amz-Date"
-	PARAM_DATE_OSS_CAMEL          = "X-oss-Date"
+	PARAM_DATE_OSS_CAMEL          = "X-OSS-Date"
 	PARAM_EXPIRES_AMZ_CAMEL       = "X-Amz-Expires"
 	PARAM_SIGNEDHEADERS_AMZ_CAMEL = "X-Amz-SignedHeaders"
 	PARAM_SIGNATURE_AMZ_CAMEL     = "X-Amz-Signature"
@@ -166,7 +166,7 @@ const (
 	V4_SERVICE_SUFFIX = "aws4_request"
 
 	V2_HASH_PREFIX  = "AWS"
-	OSS_HASH_PREFIX = "oss"
+	OSS_HASH_PREFIX = "OSS"
 
 	V4_HASH_PREFIX = "AWS4-HMAC-SHA256"
 	V4_HASH_PRE    = "AWS4"
@@ -201,8 +201,8 @@ const (
 	SignatureV2 SignatureType = "v2"
 	// SignatureV4 signature type v4
 	SignatureV4 SignatureType = "v4"
-	// SignatureOSS signature type oss
-	SignatureOSS SignatureType = "oss"
+	// SignatureOSS signature type OSS
+	SignatureOSS SignatureType = "OSS"
 )
 
 var (
@@ -273,7 +273,7 @@ var (
 		"response-content-disposition": true,
 		"response-content-encoding":    true,
 		"x-image-process":              true,
-		"x-oss-process":                true,
+		"x-OSS-process":                true,
 		"x-image-save-bucket":          true,
 		"x-image-save-object":          true,
 		"ignore-sign-in-query":         true,

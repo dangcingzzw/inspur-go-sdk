@@ -10,14 +10,14 @@
 // CONDITIONS OF ANY KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations under the License.
 
-package oss
+package OSS
 
 import (
 	"encoding/xml"
 	"fmt"
 )
 
-// OSSError defines error response from oss
+// OSSError defines error response from OSS
 type OSSError struct {
 	BaseModel
 	Status   string
@@ -29,6 +29,6 @@ type OSSError struct {
 }
 
 func (err OSSError) Error() string {
-	return fmt.Sprintf("oss: service returned error: Status=%s, Code=%s, Message=%s, RequestId=%s",
+	return fmt.Sprintf("OSS: service returned error: Status=%s, Code=%s, Message=%s, RequestId=%s",
 		err.Status, err.Code, err.Message, err.RequestId)
 }

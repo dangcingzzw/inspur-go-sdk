@@ -12,7 +12,7 @@
 
 /**
  * This sample demonstrates how to download an cold object
- * from oss using the oss SDK for Go.
+ * from OSS using the OSS SDK for Go.
  */
 package examples
 
@@ -56,7 +56,7 @@ func (sample RestoreObjectSample) CreateObject() {
 	input := &OSS.PutObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
-	input.Body = strings.NewReader("Hello oss")
+	input.Body = strings.NewReader("Hello OSS")
 
 	_, err := sample.OSSClient.PutObject(input)
 	if err != nil {

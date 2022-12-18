@@ -12,7 +12,7 @@
 
 /**
  * This sample demonstrates how to delete objects under specified bucket
- * from oss using the oss SDK for Go.
+ * from OSS using the OSS SDK for Go.
  */
 package examples
 

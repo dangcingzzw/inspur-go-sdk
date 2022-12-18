@@ -11,8 +11,8 @@
 // specific language governing permissions and limitations under the License.
 
 /**
- * This sample demonstrates how to upload multiparts to oss
- * using the oss SDK for Go.
+ * This sample demonstrates how to upload multiparts to OSS
+ * using the OSS SDK for Go.
  */
 package examples
 
@@ -66,7 +66,7 @@ func (sample SimpleMultipartUploadSample) UploadPart(uploadId string) (string, i
 	input.Key = sample.objectKey
 	input.UploadId = uploadId
 	input.PartNumber = 1
-	input.Body = strings.NewReader("Hello oss")
+	input.Body = strings.NewReader("Hello OSS")
 	output, err := sample.OSSClient.UploadPart(input)
 	if err != nil {
 		panic(err)

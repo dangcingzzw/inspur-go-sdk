@@ -12,7 +12,7 @@
 
 /**
  * This sample demonstrates how to create an empty folder under
- * specified bucket to oss using the oss SDK for Go.
+ * specified bucket to OSS using the OSS SDK for Go.
  */
 package examples
 

@@ -12,7 +12,7 @@
 
 /**
  * This sample demonstrates how to download an object
- * from oss in different ways using the oss SDK for Go.
+ * from OSS in different ways using the OSS SDK for Go.
  */
 package examples
 
@@ -56,7 +56,7 @@ func (sample DownloadSample) PutObject() {
 	input := &OSS.PutObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
-	input.Body = strings.NewReader("Hello oss")
+	input.Body = strings.NewReader("Hello OSS")
 
 	_, err := sample.OSSClient.PutObject(input)
 	if err != nil {
@@ -122,7 +122,7 @@ func (DownloadSample) createSampleFile(sampleFilePath string) {
 		panic(err)
 	}
 
-	if err := ioutil.WriteFile(sampleFilePath, []byte("Hello oss from file"), os.ModePerm); err != nil {
+	if err := ioutil.WriteFile(sampleFilePath, []byte("Hello OSS from file"), os.ModePerm); err != nil {
 		panic(err)
 	}
 }
@@ -141,13 +141,13 @@ func RunDownloadSample() {
 	fmt.Println("Create a new bucket for demo")
 	sample.CreateBucket()
 
-	fmt.Println("Uploading a new object to oss from string")
+	fmt.Println("Uploading a new object to OSS from string")
 	sample.PutObject()
 
 	fmt.Println("Download object to string")
 	sample.GetObject()
 
-	fmt.Println("Uploading a new object to oss from file")
+	fmt.Println("Uploading a new object to OSS from file")
 	sampleFilePath := "/temp/text.txt"
 	sample.createSampleFile(sampleFilePath)
 	defer func() {

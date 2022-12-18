@@ -12,7 +12,7 @@
 
 /**
  * This sample demonstrates how to set/get self-defined metadata for object
- * on oss using the oss SDK for Go.
+ * on OSS using the OSS SDK for Go.
  */
 package examples
 
@@ -53,7 +53,7 @@ func (sample ObjectMetaSample) SetObjectMeta() {
 	input := &OSS.PutObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
-	input.Body = strings.NewReader("Hello oss")
+	input.Body = strings.NewReader("Hello OSS")
 	// Setting object mime type
 	input.ContentType = "text/plain"
 	// Setting self-defined metadata

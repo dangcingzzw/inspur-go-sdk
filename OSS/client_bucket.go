@@ -10,7 +10,7 @@
 // CONDITIONS OF ANY KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations under the License.
 
-package oss
+package OSS
 
 import (
 	"errors"
@@ -35,7 +35,7 @@ func (OSSClient OSSClient) ListBuckets(input *ListBucketsInput, extensions ...ex
 
 // CreateBucket creates a bucket.
 //
-// You can use this API to create a bucket and name it as you specify. The created bucket name must be unique in oss.
+// You can use this API to create a bucket and name it as you specify. The created bucket name must be unique in OSS.
 func (OSSClient OSSClient) CreateBucket(input *CreateBucketInput, extensions ...extensionOptions) (output *BaseModel, err error) {
 	if input == nil {
 		return nil, errors.New("CreateBucketInput is nil")

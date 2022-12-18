@@ -13,7 +13,7 @@
 /**
  * This sample demonstrates how to do object-related operations
  * (such as create/delete/get/copy object, do object ACL)
- * on oss using the oss SDK for Go.
+ * on OSS using the OSS SDK for Go.
  */
 package examples
 
@@ -68,7 +68,7 @@ func (sample ObjectOperationsSample) CreateObject() {
 	input := &OSS.PutObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
-	input.Body = strings.NewReader("Hello oss")
+	input.Body = strings.NewReader("Hello OSS")
 
 	_, err := sample.OSSClient.PutObject(input)
 	if err != nil {

@@ -12,7 +12,7 @@
 
 /**
  * This sample demonstrates how to list versions under specified bucket
- * from oss using the oss SDK for Go.
+ * from OSS using the OSS SDK for Go.
  */
 package examples
 
@@ -87,7 +87,7 @@ func (sample ListVersionsSample) PrepareFoldersAndObjects() {
 	}
 
 	// Insert 2 objects in each folder
-	input.Body = strings.NewReader("Hello oss")
+	input.Body = strings.NewReader("Hello OSS")
 	listVersionsInput := &OSS.ListVersionsInput{}
 	listVersionsInput.Bucket = sample.bucketName
 	output, err := sample.OSSClient.ListVersions(listVersionsInput)

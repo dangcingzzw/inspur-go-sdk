@@ -9,13 +9,13 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 // CONDITIONS OF ANY KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations under the License.
-package oss
+package OSS
 
 import (
 	"encoding/xml"
 )
 
-// BaseModel defines base model response from oss
+// BaseModel defines base model response from OSS
 type BaseModel struct {
 	StatusCode      int                 `xml:"-"`
 	RequestId       string              `xml:"RequestId" json:"request_id"`

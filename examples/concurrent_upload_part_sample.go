@@ -12,7 +12,7 @@
 
 /**
  * This sample demonstrates how to multipart upload an object concurrently
- * from oss using the oss SDK for Go.
+ * from OSS using the OSS SDK for Go.
  */
 package examples
 
@@ -145,7 +145,7 @@ func (sample ConcurrentUploadPartSample) DoConcurrentUploadPart(sampleFilePath s
 	fmt.Println()
 
 	//  Upload parts
-	fmt.Println("Begin to upload parts to oss")
+	fmt.Println("Begin to upload parts to OSS")
 
 	partChan := make(chan OSS.Part, 5)
 

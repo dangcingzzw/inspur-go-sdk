@@ -10,7 +10,7 @@
 // CONDITIONS OF ANY KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations under the License.
 
-package oss
+package OSS
 
 import (
 	"bytes"
@@ -867,7 +867,7 @@ func parseBucketPolicyOutput(s reflect.Type, baseModel IBaseModel, body []byte) 
 	}
 }
 
-// ParseResponseToBaseModel gets response from oss
+// ParseResponseToBaseModel gets response from OSS
 func ParseResponseToBaseModel(resp *http.Response, baseModel IBaseModel, xmlResult bool, isOSS bool) (err error) {
 	readCloser, ok := baseModel.(IReadCloser)
 	if !ok {
@@ -907,7 +907,7 @@ func ParseResponseToBaseModel(resp *http.Response, baseModel IBaseModel, xmlResu
 	return
 }
 
-// ParseResponseToOSSError gets OSSError from oss
+// ParseResponseToOSSError gets OSSError from OSS
 func ParseResponseToOSSError(resp *http.Response, isOSS bool) error {
 	isJson := false
 	if contentType, ok := resp.Header[HEADER_CONTENT_TYPE_CAML]; ok {

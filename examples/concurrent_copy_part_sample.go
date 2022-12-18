@@ -12,7 +12,7 @@
 
 /**
  * This sample demonstrates how to multipart upload an object concurrently by copy mode
- * to oss using the oss SDK for Go.
+ * to OSS using the OSS SDK for Go.
  */
 package examples
 
@@ -159,7 +159,7 @@ func (sample ConcurrentCopyPartSample) DoConcurrentCopyPart() {
 	fmt.Println()
 
 	//  Upload multiparts by copy mode
-	fmt.Println("Begin to upload multiparts to oss by copy mode")
+	fmt.Println("Begin to upload multiparts to OSS by copy mode")
 
 	partChan := make(chan OSS.Part, 5)
 

@@ -251,7 +251,7 @@ func getBucketLocation() {
 func setBucketAcl() {
 	input := &OSS.SetBucketAclInput{}
 	input.Bucket = bucketName
-	//		input.ACL = oss.AclPublicRead
+	//		input.ACL = OSS.AclPublicRead
 	input.Owner.ID = "ownerid"
 	var grants [3]OSS.Grant
 	grants[0].Grantee.Type = OSS.GranteeGroup
@@ -360,7 +360,7 @@ func setBucketCors() {
 	corsRule0.AllowedMethod = []string{"GET", "PUT", "POST", "HEAD"}
 	corsRule0.AllowedHeader = []string{"header1", "header2"}
 	corsRule0.MaxAgeSeconds = 100
-	corsRule0.ExposeHeader = []string{"oss-1", "oss-2"}
+	corsRule0.ExposeHeader = []string{"OSS-1", "OSS-2"}
 	corsRules[0] = corsRule0
 	corsRule1 := OSS.CorsRule{}
 
@@ -369,7 +369,7 @@ func setBucketCors() {
 	corsRule1.AllowedMethod = []string{"GET", "PUT", "POST", "HEAD"}
 	corsRule1.AllowedHeader = []string{"header3", "header4"}
 	corsRule1.MaxAgeSeconds = 50
-	corsRule1.ExposeHeader = []string{"oss-3", "oss-4"}
+	corsRule1.ExposeHeader = []string{"OSS-3", "OSS-4"}
 	corsRules[1] = corsRule1
 	input.CorsRules = corsRules[:]
 	output, err := getOSSClient().SetBucketCors(input)
@@ -540,7 +540,7 @@ func setBucketWebsiteConfiguration() {
 	input := &OSS.SetBucketWebsiteConfigurationInput{}
 	input.Bucket = bucketName
 	//	input.RedirectAllRequestsTo.HostName = "www.a.com"
-	//	input.RedirectAllRequestsTo.Protocol = oss.ProtocolHttp
+	//	input.RedirectAllRequestsTo.Protocol = OSS.ProtocolHttp
 	input.IndexDocument.Suffix = "suffix"
 	input.ErrorDocument.Key = "key"
 
@@ -962,7 +962,7 @@ func setObjectAcl() {
 	input := &OSS.SetObjectAclInput{}
 	input.Bucket = bucketName
 	input.Key = objectKey
-	// input.ACL = oss.AclPublicRead
+	// input.ACL = OSS.AclPublicRead
 	input.Owner.ID = "ownerid"
 	var grants [3]OSS.Grant
 	grants[0].Grantee.Type = OSS.GranteeGroup
@@ -1128,7 +1128,7 @@ func putObject() {
 	input.Bucket = bucketName
 	input.Key = objectKey
 	input.Metadata = map[string]string{"meta": "value"}
-	input.Body = strings.NewReader("Hello oss")
+	input.Body = strings.NewReader("Hello OSS")
 	output, err := getOSSClient().PutObject(input)
 	if err == nil {
 		fmt.Printf("StatusCode:%d, RequestId:%s\n", output.StatusCode, output.RequestId)
@@ -1355,7 +1355,7 @@ func runExamples() {
 func main() {
 	//---- init log ----
 	defer OSS.CloseLog()
-	OSS.InitLog("/temp/oss-SDK.log", 1024*1024*100, 5, OSS.LEVEL_WARN, false)
+	OSS.InitLog("/temp/OSS-SDK.log", 1024*1024*100, 5, OSS.LEVEL_WARN, false)
 
 	//---- run examples----
 	//	runExamples()
@@ -1363,7 +1363,7 @@ func main() {
 	//---- bucket related APIs ----
 	//	createBucket()
 	//  listBuckets()
-	//	oss.FlushLog()
+	//	OSS.FlushLog()
 	//	setBucketStoragePolicy()
 	//	getBucketStoragePolicy()
 	//  listObjects()

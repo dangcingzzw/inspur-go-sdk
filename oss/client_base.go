@@ -10,7 +10,7 @@
 // CONDITIONS OF ANY KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations under the License.
 
-package oss
+package OSS
 
 import (
 	"fmt"
@@ -18,7 +18,7 @@ import (
 	"strings"
 )
 
-// OSSClient defines oss client.
+// OSSClient defines OSS client.
 type OSSClient struct {
 	conf       *config
 	httpClient *http.Client
@@ -46,7 +46,7 @@ func New(ak, sk, endpoint string, configurers ...configurer) (*OSSClient, error)
 
 	if isWarnLogEnabled() {
 		info := make([]string, 3)
-		info[0] = fmt.Sprintf("[oss SDK Version=%s", OSS_SDK_VERSION)
+		info[0] = fmt.Sprintf("[OSS SDK Version=%s", OSS_SDK_VERSION)
 		info[1] = fmt.Sprintf("Endpoint=%s", conf.endpoint)
 		accessMode := "Virtual Hosting"
 		if conf.pathStyle {

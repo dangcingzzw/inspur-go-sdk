@@ -12,7 +12,7 @@
 
 /**
  * This sample demonstrates how to list objects under specified bucket
- * from oss using the oss SDK for Go.
+ * from OSS using the OSS SDK for Go.
  */
 package examples
 
@@ -55,7 +55,7 @@ func (sample ListObjectsSample) DoInsertObjects() []string {
 
 	input := &OSS.PutObjectInput{}
 	input.Bucket = sample.bucketName
-	input.Body = strings.NewReader("Hello oss")
+	input.Body = strings.NewReader("Hello OSS")
 	keys := make([]string, 0, 100)
 	for i := 0; i < 100; i++ {
 		input.Key = keyPrefix + strconv.Itoa(i)

@@ -11,7 +11,7 @@
 // specific language governing permissions and limitations under the License.
 
 //nolint:structcheck, unused
-package oss
+package OSS
 
 import (
 	"bytes"

@@ -12,7 +12,7 @@
 
 /**
  * This sample demonstrates how to do common operations in temporary signature way
- * on oss using the oss SDK for Go.
+ * on OSS using the OSS SDK for Go.
  */
 package examples
 
@@ -171,7 +171,7 @@ func (sample TemporarySignatureSample) PutObject() {
 	fmt.Printf("%s using temporary signature url:\n", "PutObject")
 	fmt.Println(output.SignedUrl)
 
-	data := strings.NewReader("Hello oss")
+	data := strings.NewReader("Hello OSS")
 	_, err = sample.OSSClient.PutObjectWithSignedUrl(output.SignedUrl, output.ActualSignedRequestHeaders, data)
 	if err != nil {
 		panic(err)
@@ -185,7 +185,7 @@ func (TemporarySignatureSample) createSampleFile(sampleFilePath string) {
 		panic(err)
 	}
 
-	if err := ioutil.WriteFile(sampleFilePath, []byte("Hello oss from file"), os.ModePerm); err != nil {
+	if err := ioutil.WriteFile(sampleFilePath, []byte("Hello OSS from file"), os.ModePerm); err != nil {
 		panic(err)
 	}
 }
