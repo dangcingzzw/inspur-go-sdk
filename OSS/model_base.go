@@ -46,7 +46,7 @@ type bucketLocationOSS struct {
 
 // BucketLocation defines bucket location configuration
 type BucketLocation struct {
-	XMLName  xml.Name `xml:"CreateBucketConfiguration"`
+	XMLName  xml.Name `xml:"Location"`
 	Location string   `xml:"LocationConstraint,omitempty"`
 }
 

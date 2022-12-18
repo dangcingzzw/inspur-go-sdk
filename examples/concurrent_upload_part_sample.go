@@ -12,16 +12,16 @@
 
 /**
  * This sample demonstrates how to multipart upload an object concurrently
- * from OSS using the OSS SDK for Go.
+ * from oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"errors"
 	"fmt"
 	"math/rand"
 	"os"
+	"oss"
 	"path/filepath"
 	"time"
 )
@@ -30,11 +30,11 @@ type ConcurrentUploadPartSample struct {
 	bucketName string
 	objectKey  string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newConcurrentUploadPartSample(ak, sk, endpoint, bucketName, objectKey, location string) *ConcurrentUploadPartSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -42,7 +42,7 @@ func newConcurrentUploadPartSample(ak, sk, endpoint, bucketName, objectKey, loca
 }
 
 func (sample ConcurrentUploadPartSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -102,7 +102,7 @@ func (sample ConcurrentUploadPartSample) createSampleFile(sampleFilePath string,
 }
 
 func (sample ConcurrentUploadPartSample) PutFile(sampleFilePath string) {
-	input := &OSS.PutFileInput{}
+	input := &oss.PutFileInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	input.SourceFile = sampleFilePath
@@ -114,7 +114,7 @@ func (sample ConcurrentUploadPartSample) PutFile(sampleFilePath string) {
 
 func (sample ConcurrentUploadPartSample) DoConcurrentUploadPart(sampleFilePath string) {
 	// Claim a upload id firstly
-	input := &OSS.InitiateMultipartUploadInput{}
+	input := &oss.InitiateMultipartUploadInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	output, err := sample.OSSClient.InitiateMultipartUpload(input)
@@ -145,9 +145,9 @@ func (sample ConcurrentUploadPartSample) DoConcurrentUploadPart(sampleFilePath s
 	fmt.Println()
 
 	//  Upload parts
-	fmt.Println("Begin to upload parts to OSS")
+	fmt.Println("Begin to upload parts to oss")
 
-	partChan := make(chan OSS.Part, 5)
+	partChan := make(chan oss.Part, 5)
 
 	for i := 0; i < partCount; i++ {
 		partNumber := i + 1
@@ -157,7 +157,7 @@ func (sample ConcurrentUploadPartSample) DoConcurrentUploadPart(sampleFilePath s
 			currPartSize = fileSize - offset
 		}
 		go func(index int, offset, partSize int64) {
-			uploadPartInput := &OSS.UploadPartInput{}
+			uploadPartInput := &oss.UploadPartInput{}
 			uploadPartInput.Bucket = sample.bucketName
 			uploadPartInput.Key = sample.objectKey
 			uploadPartInput.UploadId = uploadId
@@ -168,14 +168,14 @@ func (sample ConcurrentUploadPartSample) DoConcurrentUploadPart(sampleFilePath s
 			uploadPartInputOutput, errMsg := sample.OSSClient.UploadPart(uploadPartInput)
 			if errMsg == nil {
 				fmt.Printf("%d finished\n", index)
-				partChan <- OSS.Part{ETag: uploadPartInputOutput.ETag, PartNumber: uploadPartInputOutput.PartNumber}
+				partChan <- oss.Part{ETag: uploadPartInputOutput.ETag, PartNumber: uploadPartInputOutput.PartNumber}
 			} else {
 				panic(errMsg)
 			}
 		}(partNumber, offset, currPartSize)
 	}
 
-	parts := make([]OSS.Part, 0, partCount)
+	parts := make([]oss.Part, 0, partCount)
 
 	for {
 		part, ok := <-partChan
@@ -190,7 +190,7 @@ func (sample ConcurrentUploadPartSample) DoConcurrentUploadPart(sampleFilePath s
 
 	fmt.Println()
 	fmt.Println("Completing to upload multiparts")
-	completeMultipartUploadInput := &OSS.CompleteMultipartUploadInput{}
+	completeMultipartUploadInput := &oss.CompleteMultipartUploadInput{}
 	completeMultipartUploadInput.Bucket = sample.bucketName
 	completeMultipartUploadInput.Key = sample.objectKey
 	completeMultipartUploadInput.UploadId = uploadId
@@ -198,7 +198,7 @@ func (sample ConcurrentUploadPartSample) DoConcurrentUploadPart(sampleFilePath s
 	sample.doCompleteMultipartUpload(completeMultipartUploadInput)
 }
 
-func (sample ConcurrentUploadPartSample) doCompleteMultipartUpload(input *OSS.CompleteMultipartUploadInput) {
+func (sample ConcurrentUploadPartSample) doCompleteMultipartUpload(input *oss.CompleteMultipartUploadInput) {
 	_, err := sample.OSSClient.CompleteMultipartUpload(input)
 	if err != nil {
 		panic(err)

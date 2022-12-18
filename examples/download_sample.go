@@ -12,15 +12,15 @@
 
 /**
  * This sample demonstrates how to download an object
- * from OSS in different ways using the OSS SDK for Go.
+ * from oss in different ways using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"oss"
 	"path/filepath"
 	"strings"
 )
@@ -29,11 +29,11 @@ type DownloadSample struct {
 	bucketName string
 	objectKey  string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newDownloadSample(ak, sk, endpoint, bucketName, objectKey, location string) *DownloadSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -41,7 +41,7 @@ func newDownloadSample(ak, sk, endpoint, bucketName, objectKey, location string)
 }
 
 func (sample DownloadSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -53,10 +53,10 @@ func (sample DownloadSample) CreateBucket() {
 }
 
 func (sample DownloadSample) PutObject() {
-	input := &OSS.PutObjectInput{}
+	input := &oss.PutObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
-	input.Body = strings.NewReader("Hello OSS")
+	input.Body = strings.NewReader("Hello oss")
 
 	_, err := sample.OSSClient.PutObject(input)
 	if err != nil {
@@ -67,7 +67,7 @@ func (sample DownloadSample) PutObject() {
 }
 
 func (sample DownloadSample) GetObject() {
-	input := &OSS.GetObjectInput{}
+	input := &oss.GetObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 
@@ -91,7 +91,7 @@ func (sample DownloadSample) GetObject() {
 }
 
 func (sample DownloadSample) PutFile(sampleFilePath string) {
-	input := &OSS.PutFileInput{}
+	input := &oss.PutFileInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	input.SourceFile = sampleFilePath
@@ -105,7 +105,7 @@ func (sample DownloadSample) PutFile(sampleFilePath string) {
 }
 
 func (sample DownloadSample) DeleteObject() {
-	input := &OSS.DeleteObjectInput{}
+	input := &oss.DeleteObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 
@@ -122,7 +122,7 @@ func (DownloadSample) createSampleFile(sampleFilePath string) {
 		panic(err)
 	}
 
-	if err := ioutil.WriteFile(sampleFilePath, []byte("Hello OSS from file"), os.ModePerm); err != nil {
+	if err := ioutil.WriteFile(sampleFilePath, []byte("Hello oss from file"), os.ModePerm); err != nil {
 		panic(err)
 	}
 }
@@ -141,13 +141,13 @@ func RunDownloadSample() {
 	fmt.Println("Create a new bucket for demo")
 	sample.CreateBucket()
 
-	fmt.Println("Uploading a new object to OSS from string")
+	fmt.Println("Uploading a new object to oss from string")
 	sample.PutObject()
 
 	fmt.Println("Download object to string")
 	sample.GetObject()
 
-	fmt.Println("Uploading a new object to OSS from file")
+	fmt.Println("Uploading a new object to oss from file")
 	sampleFilePath := "/temp/text.txt"
 	sample.createSampleFile(sampleFilePath)
 	defer func() {

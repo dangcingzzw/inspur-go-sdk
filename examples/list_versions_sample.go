@@ -12,13 +12,13 @@
 
 /**
  * This sample demonstrates how to list versions under specified bucket
- * from OSS using the OSS SDK for Go.
+ * from oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"fmt"
+	"oss"
 	"strconv"
 	"strings"
 )
@@ -26,11 +26,11 @@ import (
 type ListVersionsSample struct {
 	bucketName string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newListVersionsSample(ak, sk, endpoint, bucketName, location string) *ListVersionsSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +38,7 @@ func newListVersionsSample(ak, sk, endpoint, bucketName, location string) *ListV
 }
 
 func (sample ListVersionsSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -46,9 +46,9 @@ func (sample ListVersionsSample) CreateBucket() {
 		panic(err)
 	}
 
-	setBucketVersioningInput := &OSS.SetBucketVersioningInput{}
+	setBucketVersioningInput := &oss.SetBucketVersioningInput{}
 	setBucketVersioningInput.Bucket = sample.bucketName
-	setBucketVersioningInput.Status = OSS.VersioningStatusEnabled
+	setBucketVersioningInput.Status = oss.VersioningStatusEnabled
 	_, err = sample.OSSClient.SetBucketVersioning(setBucketVersioningInput)
 
 	if err != nil {
@@ -58,7 +58,7 @@ func (sample ListVersionsSample) CreateBucket() {
 	fmt.Println()
 }
 
-func (sample ListVersionsSample) preparePutObject(input *OSS.PutObjectInput) {
+func (sample ListVersionsSample) preparePutObject(input *oss.PutObjectInput) {
 	_, err := sample.OSSClient.PutObject(input)
 	if err != nil {
 		panic(err)
@@ -71,7 +71,7 @@ func (sample ListVersionsSample) PrepareFoldersAndObjects() {
 	folderPrefix := "src"
 	subFolderPrefix := "test"
 
-	input := &OSS.PutObjectInput{}
+	input := &oss.PutObjectInput{}
 	input.Bucket = sample.bucketName
 
 	// First prepare folders and sub folders
@@ -87,8 +87,8 @@ func (sample ListVersionsSample) PrepareFoldersAndObjects() {
 	}
 
 	// Insert 2 objects in each folder
-	input.Body = strings.NewReader("Hello OSS")
-	listVersionsInput := &OSS.ListVersionsInput{}
+	input.Body = strings.NewReader("Hello oss")
+	listVersionsInput := &oss.ListVersionsInput{}
 	listVersionsInput.Bucket = sample.bucketName
 	output, err := sample.OSSClient.ListVersions(listVersionsInput)
 	if err != nil {
@@ -114,7 +114,7 @@ func (sample ListVersionsSample) PrepareFoldersAndObjects() {
 
 func (sample ListVersionsSample) ListVersionsInFolders() {
 	fmt.Println("List versions in folder src0/")
-	input := &OSS.ListVersionsInput{}
+	input := &oss.ListVersionsInput{}
 	input.Bucket = sample.bucketName
 	input.Prefix = "src0/"
 	output, err := sample.OSSClient.ListVersions(input)
@@ -147,7 +147,7 @@ func (sample ListVersionsSample) ListVersionsByPage() {
 
 	pageSize := 10
 	pageNum := 1
-	input := &OSS.ListVersionsInput{}
+	input := &oss.ListVersionsInput{}
 	input.Bucket = sample.bucketName
 	input.MaxKeys = pageSize
 
@@ -174,7 +174,7 @@ func (sample ListVersionsSample) ListVersionsByPage() {
 }
 
 func (sample ListVersionsSample) listVersionsByPrefixes(commonPrefixes []string) {
-	input := &OSS.ListVersionsInput{}
+	input := &oss.ListVersionsInput{}
 	input.Bucket = sample.bucketName
 	input.Delimiter = "/"
 	for _, prefix := range commonPrefixes {
@@ -195,7 +195,7 @@ func (sample ListVersionsSample) listVersionsByPrefixes(commonPrefixes []string)
 
 func (sample ListVersionsSample) ListVersionsGroupByFolder() {
 	fmt.Println("List versions group by folder")
-	input := &OSS.ListVersionsInput{}
+	input := &oss.ListVersionsInput{}
 	input.Bucket = sample.bucketName
 	input.Delimiter = "/"
 	output, err := sample.OSSClient.ListVersions(input)
@@ -212,17 +212,17 @@ func (sample ListVersionsSample) ListVersionsGroupByFolder() {
 }
 
 func (sample ListVersionsSample) BatchDeleteVersions() {
-	input := &OSS.ListVersionsInput{}
+	input := &oss.ListVersionsInput{}
 	input.Bucket = sample.bucketName
 	output, err := sample.OSSClient.ListVersions(input)
 	if err != nil {
 		panic(err)
 	}
-	objects := make([]OSS.ObjectToDelete, 0, len(output.Versions))
+	objects := make([]oss.ObjectToDelete, 0, len(output.Versions))
 	for _, val := range output.Versions {
-		objects = append(objects, OSS.ObjectToDelete{Key: val.Key, VersionId: val.VersionId})
+		objects = append(objects, oss.ObjectToDelete{Key: val.Key, VersionId: val.VersionId})
 	}
-	deleteObjectsInput := &OSS.DeleteObjectsInput{}
+	deleteObjectsInput := &oss.DeleteObjectsInput{}
 	deleteObjectsInput.Bucket = sample.bucketName
 	deleteObjectsInput.Objects = objects[:]
 	_, err = sample.OSSClient.DeleteObjects(deleteObjectsInput)

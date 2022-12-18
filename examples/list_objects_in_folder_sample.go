@@ -12,13 +12,13 @@
 
 /**
  * This sample demonstrates how to list objects under a specified folder of a bucket
- * from OSS using the OSS SDK for Go.
+ * from oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"fmt"
+	"oss"
 	"strconv"
 	"strings"
 )
@@ -26,11 +26,11 @@ import (
 type ListObjectsInFolderSample struct {
 	bucketName string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newListObjectsInFolderSample(ak, sk, endpoint, bucketName, location string) *ListObjectsInFolderSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +38,7 @@ func newListObjectsInFolderSample(ak, sk, endpoint, bucketName, location string)
 }
 
 func (sample ListObjectsInFolderSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -49,7 +49,7 @@ func (sample ListObjectsInFolderSample) CreateBucket() {
 	fmt.Println()
 }
 
-func (sample ListObjectsInFolderSample) prepareObjects(input *OSS.PutObjectInput) {
+func (sample ListObjectsInFolderSample) prepareObjects(input *oss.PutObjectInput) {
 	_, err := sample.OSSClient.PutObject(input)
 	if err != nil {
 		panic(err)
@@ -62,7 +62,7 @@ func (sample ListObjectsInFolderSample) PrepareFoldersAndObjects() {
 	folderPrefix := "src"
 	subFolderPrefix := "test"
 
-	input := &OSS.PutObjectInput{}
+	input := &oss.PutObjectInput{}
 	input.Bucket = sample.bucketName
 
 	// First prepare folders and sub folders
@@ -78,8 +78,8 @@ func (sample ListObjectsInFolderSample) PrepareFoldersAndObjects() {
 	}
 
 	// Insert 2 objects in each folder
-	input.Body = strings.NewReader("Hello OSS")
-	listObjectsInput := &OSS.ListObjectsInput{}
+	input.Body = strings.NewReader("Hello oss")
+	listObjectsInput := &oss.ListObjectsInput{}
 	listObjectsInput.Bucket = sample.bucketName
 	output, err := sample.OSSClient.ListObjects(listObjectsInput)
 	if err != nil {
@@ -105,7 +105,7 @@ func (sample ListObjectsInFolderSample) PrepareFoldersAndObjects() {
 
 func (sample ListObjectsInFolderSample) ListObjectsInFolders() {
 	fmt.Println("List objects in folder src0/")
-	input := &OSS.ListObjectsInput{}
+	input := &oss.ListObjectsInput{}
 	input.Bucket = sample.bucketName
 	input.Prefix = "src0/"
 	output, err := sample.OSSClient.ListObjects(input)
@@ -135,7 +135,7 @@ func (sample ListObjectsInFolderSample) ListObjectsInFolders() {
 }
 
 func (sample ListObjectsInFolderSample) listObjectsByPrefixes(commonPrefixes []string) {
-	input := &OSS.ListObjectsInput{}
+	input := &oss.ListObjectsInput{}
 	input.Bucket = sample.bucketName
 	input.Delimiter = "/"
 	for _, prefix := range commonPrefixes {
@@ -156,7 +156,7 @@ func (sample ListObjectsInFolderSample) listObjectsByPrefixes(commonPrefixes []s
 
 func (sample ListObjectsInFolderSample) ListObjectsGroupByFolder() {
 	fmt.Println("List objects group by folder")
-	input := &OSS.ListObjectsInput{}
+	input := &oss.ListObjectsInput{}
 	input.Bucket = sample.bucketName
 	input.Delimiter = "/"
 	output, err := sample.OSSClient.ListObjects(input)
@@ -173,17 +173,17 @@ func (sample ListObjectsInFolderSample) ListObjectsGroupByFolder() {
 }
 
 func (sample ListObjectsInFolderSample) BatchDeleteObjects() {
-	input := &OSS.ListObjectsInput{}
+	input := &oss.ListObjectsInput{}
 	input.Bucket = sample.bucketName
 	output, err := sample.OSSClient.ListObjects(input)
 	if err != nil {
 		panic(err)
 	}
-	objects := make([]OSS.ObjectToDelete, 0, len(output.Contents))
+	objects := make([]oss.ObjectToDelete, 0, len(output.Contents))
 	for _, content := range output.Contents {
-		objects = append(objects, OSS.ObjectToDelete{Key: content.Key})
+		objects = append(objects, oss.ObjectToDelete{Key: content.Key})
 	}
-	deleteObjectsInput := &OSS.DeleteObjectsInput{}
+	deleteObjectsInput := &oss.DeleteObjectsInput{}
 	deleteObjectsInput.Bucket = sample.bucketName
 	deleteObjectsInput.Objects = objects[:]
 	_, err = sample.OSSClient.DeleteObjects(deleteObjectsInput)

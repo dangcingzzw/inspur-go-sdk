@@ -12,16 +12,16 @@
 
 /**
  * This sample demonstrates how to multipart upload an object concurrently by copy mode
- * to OSS using the OSS SDK for Go.
+ * to oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"errors"
 	"fmt"
 	"math/rand"
 	"os"
+	"oss"
 	"path/filepath"
 	"time"
 )
@@ -34,11 +34,11 @@ type ConcurrentCopyPartSample struct {
 	bucketName string
 	objectKey  string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newConcurrentCopyPartSample(ak, sk, endpoint, bucketName, objectKey, location string) *ConcurrentCopyPartSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -46,7 +46,7 @@ func newConcurrentCopyPartSample(ak, sk, endpoint, bucketName, objectKey, locati
 }
 
 func (sample ConcurrentCopyPartSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -107,7 +107,7 @@ func (sample ConcurrentCopyPartSample) createSampleFile(sampleFilePath string, b
 }
 
 func (sample ConcurrentCopyPartSample) PutFile(sampleFilePath string) {
-	input := &OSS.PutFileInput{}
+	input := &oss.PutFileInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	input.SourceFile = sampleFilePath
@@ -123,7 +123,7 @@ func (sample ConcurrentCopyPartSample) DoConcurrentCopyPart() {
 	sourceBucketName := sample.bucketName
 	sourceObjectKey := sample.objectKey
 	// Claim a upload id firstly
-	input := &OSS.InitiateMultipartUploadInput{}
+	input := &oss.InitiateMultipartUploadInput{}
 	input.Bucket = destBucketName
 	input.Key = destObjectKey
 	output, err := sample.OSSClient.InitiateMultipartUpload(input)
@@ -136,7 +136,7 @@ func (sample ConcurrentCopyPartSample) DoConcurrentCopyPart() {
 	fmt.Println()
 
 	// Get size of the object
-	getObjectMetadataInput := &OSS.GetObjectMetadataInput{}
+	getObjectMetadataInput := &oss.GetObjectMetadataInput{}
 	getObjectMetadataInput.Bucket = sourceBucketName
 	getObjectMetadataInput.Key = sourceObjectKey
 	getObjectMetadataOutput, err := sample.OSSClient.GetObjectMetadata(getObjectMetadataInput)
@@ -159,9 +159,9 @@ func (sample ConcurrentCopyPartSample) DoConcurrentCopyPart() {
 	fmt.Println()
 
 	//  Upload multiparts by copy mode
-	fmt.Println("Begin to upload multiparts to OSS by copy mode")
+	fmt.Println("Begin to upload multiparts to oss by copy mode")
 
-	partChan := make(chan OSS.Part, 5)
+	partChan := make(chan oss.Part, 5)
 
 	for i := 0; i < partCount; i++ {
 		partNumber := i + 1
@@ -171,7 +171,7 @@ func (sample ConcurrentCopyPartSample) DoConcurrentCopyPart() {
 			rangeEnd = objectSize - 1
 		}
 		go func(start, end int64, index int) {
-			copyPartInput := &OSS.CopyPartInput{}
+			copyPartInput := &oss.CopyPartInput{}
 			copyPartInput.Bucket = destBucketName
 			copyPartInput.Key = destObjectKey
 			copyPartInput.UploadId = uploadId
@@ -183,14 +183,14 @@ func (sample ConcurrentCopyPartSample) DoConcurrentCopyPart() {
 			copyPartOutput, errMsg := sample.OSSClient.CopyPart(copyPartInput)
 			if errMsg == nil {
 				fmt.Printf("%d finished\n", index)
-				partChan <- OSS.Part{ETag: copyPartOutput.ETag, PartNumber: copyPartOutput.PartNumber}
+				partChan <- oss.Part{ETag: copyPartOutput.ETag, PartNumber: copyPartOutput.PartNumber}
 			} else {
 				panic(errMsg)
 			}
 		}(rangeStart, rangeEnd, partNumber)
 	}
 
-	parts := make([]OSS.Part, 0, partCount)
+	parts := make([]oss.Part, 0, partCount)
 
 	for {
 		part, ok := <-partChan
@@ -205,7 +205,7 @@ func (sample ConcurrentCopyPartSample) DoConcurrentCopyPart() {
 
 	fmt.Println()
 	fmt.Println("Completing to upload multiparts")
-	completeMultipartUploadInput := &OSS.CompleteMultipartUploadInput{}
+	completeMultipartUploadInput := &oss.CompleteMultipartUploadInput{}
 	completeMultipartUploadInput.Bucket = destBucketName
 	completeMultipartUploadInput.Key = destObjectKey
 	completeMultipartUploadInput.UploadId = uploadId
@@ -213,7 +213,7 @@ func (sample ConcurrentCopyPartSample) DoConcurrentCopyPart() {
 	sample.doCompleteMultipartUpload(completeMultipartUploadInput)
 }
 
-func (sample ConcurrentCopyPartSample) doCompleteMultipartUpload(input *OSS.CompleteMultipartUploadInput) {
+func (sample ConcurrentCopyPartSample) doCompleteMultipartUpload(input *oss.CompleteMultipartUploadInput) {
 	_, err := sample.OSSClient.CompleteMultipartUpload(input)
 	if err != nil {
 		panic(err)

@@ -12,13 +12,13 @@
 
 /**
  * This sample demonstrates how to set/get self-defined metadata for object
- * on OSS using the OSS SDK for Go.
+ * on oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"fmt"
+	"oss"
 	"strings"
 )
 
@@ -26,11 +26,11 @@ type ObjectMetaSample struct {
 	bucketName string
 	objectKey  string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newObjectMetaSample(ak, sk, endpoint, bucketName, objectKey, location string) *ObjectMetaSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +38,7 @@ func newObjectMetaSample(ak, sk, endpoint, bucketName, objectKey, location strin
 }
 
 func (sample ObjectMetaSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -50,10 +50,10 @@ func (sample ObjectMetaSample) CreateBucket() {
 }
 
 func (sample ObjectMetaSample) SetObjectMeta() {
-	input := &OSS.PutObjectInput{}
+	input := &oss.PutObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
-	input.Body = strings.NewReader("Hello OSS")
+	input.Body = strings.NewReader("Hello oss")
 	// Setting object mime type
 	input.ContentType = "text/plain"
 	// Setting self-defined metadata
@@ -67,7 +67,7 @@ func (sample ObjectMetaSample) SetObjectMeta() {
 }
 
 func (sample ObjectMetaSample) GetObjectMeta() {
-	input := &OSS.GetObjectMetadataInput{}
+	input := &oss.GetObjectMetadataInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	output, err := sample.OSSClient.GetObjectMetadata(input)
@@ -81,7 +81,7 @@ func (sample ObjectMetaSample) GetObjectMeta() {
 	fmt.Println()
 }
 func (sample ObjectMetaSample) DeleteObject() {
-	input := &OSS.DeleteObjectInput{}
+	input := &oss.DeleteObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 

@@ -12,23 +12,23 @@
 
 /**
  * This sample demonstrates how to create an empty folder under
- * specified bucket to OSS using the OSS SDK for Go.
+ * specified bucket to oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"fmt"
+	"oss"
 )
 
 type CreateFolderSample struct {
 	bucketName string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newCreateFolderSample(ak, sk, endpoint, bucketName, location string) *CreateFolderSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -36,7 +36,7 @@ func newCreateFolderSample(ak, sk, endpoint, bucketName, location string) *Creat
 }
 
 func (sample CreateFolderSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -64,7 +64,7 @@ func RunCreateFolderSample() {
 	keySuffixWithSlash2 := "MyObjectKey2/"
 
 	// Create two empty folder without request body, note that the key must be suffixed with a slash
-	var input = &OSS.PutObjectInput{}
+	var input = &oss.PutObjectInput{}
 	input.Bucket = bucketName
 	input.Key = keySuffixWithSlash1
 
@@ -84,7 +84,7 @@ func RunCreateFolderSample() {
 	fmt.Println()
 
 	// Verify whether the size of the empty folder is zero
-	var input2 = &OSS.GetObjectMetadataInput{}
+	var input2 = &oss.GetObjectMetadataInput{}
 	input2.Bucket = bucketName
 	input2.Key = keySuffixWithSlash1
 	output, err := sample.OSSClient.GetObjectMetadata(input2)

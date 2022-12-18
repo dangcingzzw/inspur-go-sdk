@@ -13,14 +13,14 @@
 /**
  * This sample demonstrates how to do object-related operations
  * (such as create/delete/get/copy object, do object ACL)
- * on OSS using the OSS SDK for Go.
+ * on oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"fmt"
 	"io/ioutil"
+	"oss"
 	"strings"
 )
 
@@ -28,11 +28,11 @@ type ObjectOperationsSample struct {
 	bucketName string
 	objectKey  string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newObjectOperationsSample(ak, sk, endpoint, bucketName, objectKey, location string) *ObjectOperationsSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -40,7 +40,7 @@ func newObjectOperationsSample(ak, sk, endpoint, bucketName, objectKey, location
 }
 
 func (sample ObjectOperationsSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -52,7 +52,7 @@ func (sample ObjectOperationsSample) CreateBucket() {
 }
 
 func (sample ObjectOperationsSample) GetObjectMeta() {
-	input := &OSS.GetObjectMetadataInput{}
+	input := &oss.GetObjectMetadataInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	output, err := sample.OSSClient.GetObjectMetadata(input)
@@ -65,10 +65,10 @@ func (sample ObjectOperationsSample) GetObjectMeta() {
 }
 
 func (sample ObjectOperationsSample) CreateObject() {
-	input := &OSS.PutObjectInput{}
+	input := &oss.PutObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
-	input.Body = strings.NewReader("Hello OSS")
+	input.Body = strings.NewReader("Hello oss")
 
 	_, err := sample.OSSClient.PutObject(input)
 	if err != nil {
@@ -79,7 +79,7 @@ func (sample ObjectOperationsSample) CreateObject() {
 }
 
 func (sample ObjectOperationsSample) GetObject() {
-	input := &OSS.GetObjectInput{}
+	input := &oss.GetObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 
@@ -103,7 +103,7 @@ func (sample ObjectOperationsSample) GetObject() {
 }
 
 func (sample ObjectOperationsSample) CopyObject() {
-	input := &OSS.CopyObjectInput{}
+	input := &oss.CopyObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey + "-back"
 	input.CopySourceBucket = sample.bucketName
@@ -118,10 +118,10 @@ func (sample ObjectOperationsSample) CopyObject() {
 }
 
 func (sample ObjectOperationsSample) DoObjectAcl() {
-	input := &OSS.SetObjectAclInput{}
+	input := &oss.SetObjectAclInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
-	input.ACL = OSS.AclPublicRead
+	input.ACL = oss.AclPublicRead
 
 	_, err := sample.OSSClient.SetObjectAcl(input)
 	if err != nil {
@@ -130,7 +130,7 @@ func (sample ObjectOperationsSample) DoObjectAcl() {
 	fmt.Println("Set object acl successfully!")
 	fmt.Println()
 
-	output, err := sample.OSSClient.GetObjectAcl(&OSS.GetObjectAclInput{Bucket: sample.bucketName, Key: sample.objectKey})
+	output, err := sample.OSSClient.GetObjectAcl(&oss.GetObjectAclInput{Bucket: sample.bucketName, Key: sample.objectKey})
 	if err != nil {
 		panic(err)
 	}
@@ -143,7 +143,7 @@ func (sample ObjectOperationsSample) DoObjectAcl() {
 }
 
 func (sample ObjectOperationsSample) DeleteObject() {
-	input := &OSS.DeleteObjectInput{}
+	input := &oss.DeleteObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 

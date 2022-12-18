@@ -11,14 +11,14 @@
 // specific language governing permissions and limitations under the License.
 
 /**
- * This sample demonstrates how to upload multiparts to OSS
- * using the OSS SDK for Go.
+ * This sample demonstrates how to upload multiparts to oss
+ * using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"fmt"
+	"oss"
 	"strings"
 )
 
@@ -26,11 +26,11 @@ type SimpleMultipartUploadSample struct {
 	bucketName string
 	objectKey  string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newSimpleMultipartUploadSample(ak, sk, endpoint, bucketName, objectKey, location string) *SimpleMultipartUploadSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +38,7 @@ func newSimpleMultipartUploadSample(ak, sk, endpoint, bucketName, objectKey, loc
 }
 
 func (sample SimpleMultipartUploadSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -50,7 +50,7 @@ func (sample SimpleMultipartUploadSample) CreateBucket() {
 }
 
 func (sample SimpleMultipartUploadSample) InitiateMultipartUpload() string {
-	input := &OSS.InitiateMultipartUploadInput{}
+	input := &oss.InitiateMultipartUploadInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	output, err := sample.OSSClient.InitiateMultipartUpload(input)
@@ -61,12 +61,12 @@ func (sample SimpleMultipartUploadSample) InitiateMultipartUpload() string {
 }
 
 func (sample SimpleMultipartUploadSample) UploadPart(uploadId string) (string, int) {
-	input := &OSS.UploadPartInput{}
+	input := &oss.UploadPartInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	input.UploadId = uploadId
 	input.PartNumber = 1
-	input.Body = strings.NewReader("Hello OSS")
+	input.Body = strings.NewReader("Hello oss")
 	output, err := sample.OSSClient.UploadPart(input)
 	if err != nil {
 		panic(err)
@@ -75,12 +75,12 @@ func (sample SimpleMultipartUploadSample) UploadPart(uploadId string) (string, i
 }
 
 func (sample SimpleMultipartUploadSample) CompleteMultipartUpload(uploadId, etag string, partNumber int) {
-	input := &OSS.CompleteMultipartUploadInput{}
+	input := &oss.CompleteMultipartUploadInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	input.UploadId = uploadId
-	input.Parts = []OSS.Part{
-		OSS.Part{PartNumber: partNumber, ETag: etag},
+	input.Parts = []oss.Part{
+		oss.Part{PartNumber: partNumber, ETag: etag},
 	}
 	_, err := sample.OSSClient.CompleteMultipartUpload(input)
 	if err != nil {

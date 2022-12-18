@@ -12,14 +12,14 @@
 
 /**
  * This sample demonstrates how to download an cold object
- * from OSS using the OSS SDK for Go.
+ * from oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"fmt"
 	"io/ioutil"
+	"oss"
 	"strings"
 	"time"
 )
@@ -28,11 +28,11 @@ type RestoreObjectSample struct {
 	bucketName string
 	objectKey  string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newRestoreObjectSample(ak, sk, endpoint, bucketName, objectKey, location string) *RestoreObjectSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -40,10 +40,10 @@ func newRestoreObjectSample(ak, sk, endpoint, bucketName, objectKey, location st
 }
 
 func (sample RestoreObjectSample) CreateColdBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
-	input.StorageClass = OSS.StorageClassCold
+	input.StorageClass = oss.StorageClassCold
 	_, err := sample.OSSClient.CreateBucket(input)
 	if err != nil {
 		panic(err)
@@ -53,10 +53,10 @@ func (sample RestoreObjectSample) CreateColdBucket() {
 }
 
 func (sample RestoreObjectSample) CreateObject() {
-	input := &OSS.PutObjectInput{}
+	input := &oss.PutObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
-	input.Body = strings.NewReader("Hello OSS")
+	input.Body = strings.NewReader("Hello oss")
 
 	_, err := sample.OSSClient.PutObject(input)
 	if err != nil {
@@ -67,11 +67,11 @@ func (sample RestoreObjectSample) CreateObject() {
 }
 
 func (sample RestoreObjectSample) RestoreObject() {
-	input := &OSS.RestoreObjectInput{}
+	input := &oss.RestoreObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	input.Days = 1
-	input.Tier = OSS.RestoreTierExpedited
+	input.Tier = oss.RestoreTierExpedited
 
 	_, err := sample.OSSClient.RestoreObject(input)
 	if err != nil {
@@ -82,7 +82,7 @@ func (sample RestoreObjectSample) RestoreObject() {
 }
 
 func (sample RestoreObjectSample) GetObject() {
-	input := &OSS.GetObjectInput{}
+	input := &oss.GetObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 
@@ -106,7 +106,7 @@ func (sample RestoreObjectSample) GetObject() {
 }
 
 func (sample RestoreObjectSample) DeleteObject() {
-	input := &OSS.DeleteObjectInput{}
+	input := &oss.DeleteObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	_, err := sample.OSSClient.DeleteObject(input)

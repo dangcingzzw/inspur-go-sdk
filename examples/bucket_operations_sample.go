@@ -13,13 +13,13 @@
 /**
  * This sample demonstrates how to do bucket-related operations
  * (such as do bucket ACL/CORS/Lifecycle/Logging/Website/Location/Tagging)
- * on OSS using the OSS SDK for Go.
+ * on oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"fmt"
+	"oss"
 	"strings"
 	"time"
 )
@@ -27,11 +27,11 @@ import (
 type BucketOperationsSample struct {
 	bucketName string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newBucketOperationsSample(ak, sk, endpoint, bucketName, location string) *BucketOperationsSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -39,7 +39,7 @@ func newBucketOperationsSample(ak, sk, endpoint, bucketName, location string) *B
 }
 
 func (sample BucketOperationsSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -69,7 +69,7 @@ func (sample BucketOperationsSample) GetBucketStorageInfo() {
 }
 
 func (sample BucketOperationsSample) DoBucketQuotaOperation() {
-	input := &OSS.SetBucketQuotaInput{}
+	input := &oss.SetBucketQuotaInput{}
 	input.Bucket = sample.bucketName
 	// Set bucket quota to 1GB
 	input.Quota = 1024 * 1024 * 1024
@@ -97,9 +97,9 @@ func (sample BucketOperationsSample) DoBucketVersioningOperation() {
 	fmt.Println()
 
 	// Enable bucket versioning
-	input := &OSS.SetBucketVersioningInput{}
+	input := &oss.SetBucketVersioningInput{}
 	input.Bucket = sample.bucketName
-	input.Status = OSS.VersioningStatusEnabled
+	input.Status = oss.VersioningStatusEnabled
 	_, err = sample.OSSClient.SetBucketVersioning(input)
 	if err != nil {
 		panic(err)
@@ -113,9 +113,9 @@ func (sample BucketOperationsSample) DoBucketVersioningOperation() {
 	fmt.Println()
 
 	// Suspend bucket versioning
-	input = &OSS.SetBucketVersioningInput{}
+	input = &oss.SetBucketVersioningInput{}
 	input.Bucket = sample.bucketName
-	input.Status = OSS.VersioningStatusSuspended
+	input.Status = oss.VersioningStatusSuspended
 	_, err = sample.OSSClient.SetBucketVersioning(input)
 	if err != nil {
 		panic(err)
@@ -130,10 +130,10 @@ func (sample BucketOperationsSample) DoBucketVersioningOperation() {
 }
 
 func (sample BucketOperationsSample) DoBucketAclOperation() {
-	input := &OSS.SetBucketAclInput{}
+	input := &oss.SetBucketAclInput{}
 	input.Bucket = sample.bucketName
 	// Setting bucket ACL to public-read
-	input.ACL = OSS.AclPublicRead
+	input.ACL = oss.AclPublicRead
 	_, err := sample.OSSClient.SetBucketAcl(input)
 	if err != nil {
 		panic(err)
@@ -155,25 +155,25 @@ func (sample BucketOperationsSample) DoBucketAclOperation() {
 }
 
 func (sample BucketOperationsSample) DoBucketCorsOperation() {
-	input := &OSS.SetBucketCorsInput{}
+	input := &oss.SetBucketCorsInput{}
 	input.Bucket = sample.bucketName
-	var corsRules [2]OSS.CorsRule
-	corsRule0 := OSS.CorsRule{}
+	var corsRules [2]oss.CorsRule
+	corsRule0 := oss.CorsRule{}
 	corsRule0.ID = "rule1"
 	corsRule0.AllowedOrigin = []string{"http://www.a.com", "http://www.b.com"}
 	corsRule0.AllowedMethod = []string{"GET", "PUT", "POST", "HEAD"}
 	corsRule0.AllowedHeader = []string{"header1", "header2"}
 	corsRule0.MaxAgeSeconds = 100
-	corsRule0.ExposeHeader = []string{"OSS-1", "OSS-2"}
+	corsRule0.ExposeHeader = []string{"oss-1", "oss-2"}
 	corsRules[0] = corsRule0
-	corsRule1 := OSS.CorsRule{}
+	corsRule1 := oss.CorsRule{}
 
 	corsRule1.ID = "rule2"
 	corsRule1.AllowedOrigin = []string{"http://www.c.com", "http://www.d.com"}
 	corsRule1.AllowedMethod = []string{"GET", "PUT", "POST", "HEAD"}
 	corsRule1.AllowedHeader = []string{"header3", "header4"}
 	corsRule1.MaxAgeSeconds = 50
-	corsRule1.ExposeHeader = []string{"OSS-3", "OSS-4"}
+	corsRule1.ExposeHeader = []string{"oss-3", "oss-4"}
 	corsRules[1] = corsRule1
 	input.CorsRules = corsRules[:]
 	// Setting bucket CORS
@@ -205,7 +205,7 @@ func (sample BucketOperationsSample) DoBucketCorsOperation() {
 }
 
 func (sample BucketOperationsSample) GetBucketMetadata() {
-	input := &OSS.GetBucketMetadataInput{}
+	input := &oss.GetBucketMetadataInput{}
 	input.Bucket = sample.bucketName
 	output, err := sample.OSSClient.GetBucketMetadata(input)
 	if err != nil {
@@ -221,23 +221,23 @@ func (sample BucketOperationsSample) GetBucketMetadata() {
 }
 
 func (sample BucketOperationsSample) DoBucketLifycleOperation() {
-	input := &OSS.SetBucketLifecycleConfigurationInput{}
+	input := &oss.SetBucketLifecycleConfigurationInput{}
 	input.Bucket = sample.bucketName
 
-	var lifecycleRules [2]OSS.LifecycleRule
-	lifecycleRule0 := OSS.LifecycleRule{}
+	var lifecycleRules [2]oss.LifecycleRule
+	lifecycleRule0 := oss.LifecycleRule{}
 	lifecycleRule0.ID = "rule0"
 	lifecycleRule0.Prefix = "prefix0"
-	lifecycleRule0.Status = OSS.RuleStatusEnabled
+	lifecycleRule0.Status = oss.RuleStatusEnabled
 
-	var transitions [2]OSS.Transition
-	transitions[0] = OSS.Transition{}
+	var transitions [2]oss.Transition
+	transitions[0] = oss.Transition{}
 	transitions[0].Days = 30
-	transitions[0].StorageClass = OSS.StorageClassWarm
+	transitions[0].StorageClass = oss.StorageClassWarm
 
-	transitions[1] = OSS.Transition{}
+	transitions[1] = oss.Transition{}
 	transitions[1].Days = 60
-	transitions[1].StorageClass = OSS.StorageClassCold
+	transitions[1].StorageClass = oss.StorageClassCold
 	lifecycleRule0.Transitions = transitions[:]
 
 	lifecycleRule0.Expiration.Days = 100
@@ -245,20 +245,20 @@ func (sample BucketOperationsSample) DoBucketLifycleOperation() {
 
 	lifecycleRules[0] = lifecycleRule0
 
-	lifecycleRule1 := OSS.LifecycleRule{}
-	lifecycleRule1.Status = OSS.RuleStatusEnabled
+	lifecycleRule1 := oss.LifecycleRule{}
+	lifecycleRule1.Status = oss.RuleStatusEnabled
 	lifecycleRule1.ID = "rule1"
 	lifecycleRule1.Prefix = "prefix1"
 	lifecycleRule1.Expiration.Date = time.Now().Add(time.Duration(24) * time.Hour)
 
-	var noncurrentTransitions [2]OSS.NoncurrentVersionTransition
-	noncurrentTransitions[0] = OSS.NoncurrentVersionTransition{}
+	var noncurrentTransitions [2]oss.NoncurrentVersionTransition
+	noncurrentTransitions[0] = oss.NoncurrentVersionTransition{}
 	noncurrentTransitions[0].NoncurrentDays = 30
-	noncurrentTransitions[0].StorageClass = OSS.StorageClassWarm
+	noncurrentTransitions[0].StorageClass = oss.StorageClassWarm
 
-	noncurrentTransitions[1] = OSS.NoncurrentVersionTransition{}
+	noncurrentTransitions[1] = oss.NoncurrentVersionTransition{}
 	noncurrentTransitions[1].NoncurrentDays = 60
-	noncurrentTransitions[1].StorageClass = OSS.StorageClassCold
+	noncurrentTransitions[1].StorageClass = oss.StorageClassCold
 	lifecycleRule1.NoncurrentVersionTransitions = noncurrentTransitions[:]
 	lifecycleRules[1] = lifecycleRule1
 
@@ -311,25 +311,25 @@ func (sample BucketOperationsSample) DoBucketLifycleOperation() {
 }
 
 func (sample BucketOperationsSample) DoBucketLoggingOperation() {
-	_, err := sample.OSSClient.SetBucketAcl(&OSS.SetBucketAclInput{Bucket: sample.bucketName, ACL: OSS.AclLogDeliveryWrite})
+	_, err := sample.OSSClient.SetBucketAcl(&oss.SetBucketAclInput{Bucket: sample.bucketName, ACL: oss.AclLogDeliveryWrite})
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println("Set bucket acl to log-delivery-write successfully!")
 	fmt.Println()
 
-	input := &OSS.SetBucketLoggingConfigurationInput{}
+	input := &oss.SetBucketLoggingConfigurationInput{}
 	input.Bucket = sample.bucketName
 	input.TargetBucket = sample.bucketName
 	input.TargetPrefix = "prefixLog"
-	var grants [2]OSS.Grant
-	grants[0].Grantee.Type = OSS.GranteeGroup
-	grants[0].Grantee.URI = OSS.GroupAuthenticatedUsers
-	grants[0].Permission = OSS.PermissionRead
+	var grants [2]oss.Grant
+	grants[0].Grantee.Type = oss.GranteeGroup
+	grants[0].Grantee.URI = oss.GroupAuthenticatedUsers
+	grants[0].Permission = oss.PermissionRead
 
-	grants[1].Grantee.Type = OSS.GranteeGroup
-	grants[1].Grantee.URI = OSS.GroupAuthenticatedUsers
-	grants[1].Permission = OSS.PermissionWrite
+	grants[1].Grantee.Type = oss.GranteeGroup
+	grants[1].Grantee.URI = oss.GroupAuthenticatedUsers
+	grants[1].Permission = oss.PermissionWrite
 
 	input.TargetGrants = grants[:]
 
@@ -350,7 +350,7 @@ func (sample BucketOperationsSample) DoBucketLoggingOperation() {
 	}
 	fmt.Println()
 
-	_, err = sample.OSSClient.SetBucketLoggingConfiguration(&OSS.SetBucketLoggingConfigurationInput{Bucket: sample.bucketName})
+	_, err = sample.OSSClient.SetBucketLoggingConfiguration(&oss.SetBucketLoggingConfigurationInput{Bucket: sample.bucketName})
 	if err != nil {
 		panic(err)
 	}
@@ -360,24 +360,24 @@ func (sample BucketOperationsSample) DoBucketLoggingOperation() {
 
 func (sample BucketOperationsSample) DoBucketWebsiteOperation() {
 
-	input := &OSS.SetBucketWebsiteConfigurationInput{}
+	input := &oss.SetBucketWebsiteConfigurationInput{}
 	input.Bucket = sample.bucketName
 	input.IndexDocument.Suffix = "suffix"
 	input.ErrorDocument.Key = "key"
 
-	var routingRules [2]OSS.RoutingRule
-	routingRule0 := OSS.RoutingRule{}
+	var routingRules [2]oss.RoutingRule
+	routingRule0 := oss.RoutingRule{}
 
 	routingRule0.Redirect.HostName = "www.a.com"
-	routingRule0.Redirect.Protocol = OSS.ProtocolHttp
+	routingRule0.Redirect.Protocol = oss.ProtocolHttp
 	routingRule0.Redirect.ReplaceKeyPrefixWith = "prefixWeb0"
 	routingRule0.Redirect.HttpRedirectCode = "304"
 	routingRules[0] = routingRule0
 
-	routingRule1 := OSS.RoutingRule{}
+	routingRule1 := oss.RoutingRule{}
 
 	routingRule1.Redirect.HostName = "www.b.com"
-	routingRule1.Redirect.Protocol = OSS.ProtocolHttps
+	routingRule1.Redirect.Protocol = oss.ProtocolHttps
 	routingRule1.Redirect.ReplaceKeyWith = "replaceKey"
 	routingRule1.Redirect.HttpRedirectCode = "304"
 
@@ -417,11 +417,11 @@ func (sample BucketOperationsSample) DoBucketWebsiteOperation() {
 }
 
 func (sample BucketOperationsSample) DoBucketTaggingOperation() {
-	input := &OSS.SetBucketTaggingInput{}
+	input := &oss.SetBucketTaggingInput{}
 	input.Bucket = sample.bucketName
-	var tags [2]OSS.Tag
-	tags[0] = OSS.Tag{Key: "key0", Value: "value0"}
-	tags[1] = OSS.Tag{Key: "key1", Value: "value1"}
+	var tags [2]oss.Tag
+	tags[0] = oss.Tag{Key: "key0", Value: "value0"}
+	tags[1] = oss.Tag{Key: "key1", Value: "value1"}
 	input.Tags = tags[:]
 	_, err := sample.OSSClient.SetBucketTagging(input)
 	if err != nil {

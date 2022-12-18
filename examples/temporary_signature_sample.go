@@ -12,15 +12,15 @@
 
 /**
  * This sample demonstrates how to do common operations in temporary signature way
- * on OSS using the OSS SDK for Go.
+ * on oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"oss"
 	"path/filepath"
 	"strings"
 )
@@ -29,11 +29,11 @@ type TemporarySignatureSample struct {
 	bucketName string
 	objectKey  string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newTemporarySignatureSample(ak, sk, endpoint, bucketName, objectKey, location string) *TemporarySignatureSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -41,9 +41,9 @@ func newTemporarySignatureSample(ak, sk, endpoint, bucketName, objectKey, locati
 }
 
 func (sample TemporarySignatureSample) CreateBucket() {
-	input := &OSS.CreateSignedUrlInput{}
+	input := &oss.CreateSignedUrlInput{}
 	input.Bucket = sample.bucketName
-	input.Method = OSS.HttpMethodPut
+	input.Method = oss.HttpMethodPut
 	input.Expires = 3600
 	output, err := sample.OSSClient.CreateSignedUrl(input)
 	if err != nil {
@@ -63,8 +63,8 @@ func (sample TemporarySignatureSample) CreateBucket() {
 }
 
 func (sample TemporarySignatureSample) ListBuckets() {
-	input := &OSS.CreateSignedUrlInput{}
-	input.Method = OSS.HttpMethodGet
+	input := &oss.CreateSignedUrlInput{}
+	input.Method = oss.HttpMethodGet
 	input.Expires = 3600
 	output, err := sample.OSSClient.CreateSignedUrl(input)
 	if err != nil {
@@ -101,12 +101,12 @@ func (sample TemporarySignatureSample) DoBucketCors() {
 		"</CORSRule>" +
 		"</CORSConfiguration>"
 
-	input := &OSS.CreateSignedUrlInput{}
-	input.Method = OSS.HttpMethodPut
+	input := &oss.CreateSignedUrlInput{}
+	input.Method = oss.HttpMethodPut
 	input.Bucket = sample.bucketName
-	input.SubResource = OSS.SubResourceCors
+	input.SubResource = oss.SubResourceCors
 	input.Expires = 3600
-	input.Headers = map[string]string{OSS.HEADER_MD5_CAMEL: OSS.Base64Md5([]byte(rawData))}
+	input.Headers = map[string]string{oss.HEADER_MD5_CAMEL: oss.Base64Md5([]byte(rawData))}
 	output, err := sample.OSSClient.CreateSignedUrl(input)
 	if err != nil {
 		panic(err)
@@ -122,7 +122,7 @@ func (sample TemporarySignatureSample) DoBucketCors() {
 	fmt.Printf("Set bucket cors:%s successfully!\n", sample.bucketName)
 	fmt.Println()
 
-	input.Method = OSS.HttpMethodGet
+	input.Method = oss.HttpMethodGet
 	output, err = sample.OSSClient.CreateSignedUrl(input)
 	if err != nil {
 		panic(err)
@@ -142,7 +142,7 @@ func (sample TemporarySignatureSample) DoBucketCors() {
 	}
 	fmt.Println()
 
-	input.Method = OSS.HttpMethodDelete
+	input.Method = oss.HttpMethodDelete
 	output, err = sample.OSSClient.CreateSignedUrl(input)
 	if err != nil {
 		panic(err)
@@ -159,8 +159,8 @@ func (sample TemporarySignatureSample) DoBucketCors() {
 }
 
 func (sample TemporarySignatureSample) PutObject() {
-	input := &OSS.CreateSignedUrlInput{}
-	input.Method = OSS.HttpMethodPut
+	input := &oss.CreateSignedUrlInput{}
+	input.Method = oss.HttpMethodPut
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	input.Expires = 3600
@@ -171,7 +171,7 @@ func (sample TemporarySignatureSample) PutObject() {
 	fmt.Printf("%s using temporary signature url:\n", "PutObject")
 	fmt.Println(output.SignedUrl)
 
-	data := strings.NewReader("Hello OSS")
+	data := strings.NewReader("Hello oss")
 	_, err = sample.OSSClient.PutObjectWithSignedUrl(output.SignedUrl, output.ActualSignedRequestHeaders, data)
 	if err != nil {
 		panic(err)
@@ -185,14 +185,14 @@ func (TemporarySignatureSample) createSampleFile(sampleFilePath string) {
 		panic(err)
 	}
 
-	if err := ioutil.WriteFile(sampleFilePath, []byte("Hello OSS from file"), os.ModePerm); err != nil {
+	if err := ioutil.WriteFile(sampleFilePath, []byte("Hello oss from file"), os.ModePerm); err != nil {
 		panic(err)
 	}
 }
 
 func (sample TemporarySignatureSample) PutFile(sampleFilePath string) {
-	input := &OSS.CreateSignedUrlInput{}
-	input.Method = OSS.HttpMethodPut
+	input := &oss.CreateSignedUrlInput{}
+	input.Method = oss.HttpMethodPut
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	input.Expires = 3600
@@ -212,8 +212,8 @@ func (sample TemporarySignatureSample) PutFile(sampleFilePath string) {
 }
 
 func (sample TemporarySignatureSample) GetObject() {
-	input := &OSS.CreateSignedUrlInput{}
-	input.Method = OSS.HttpMethodGet
+	input := &oss.CreateSignedUrlInput{}
+	input.Method = oss.HttpMethodGet
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	input.Expires = 3600
@@ -244,13 +244,13 @@ func (sample TemporarySignatureSample) GetObject() {
 }
 
 func (sample TemporarySignatureSample) DoObjectAcl() {
-	input := &OSS.CreateSignedUrlInput{}
-	input.Method = OSS.HttpMethodPut
+	input := &oss.CreateSignedUrlInput{}
+	input.Method = oss.HttpMethodPut
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
-	input.SubResource = OSS.SubResourceAcl
+	input.SubResource = oss.SubResourceAcl
 	input.Expires = 3600
-	input.Headers = map[string]string{OSS.HEADER_ACL_AMZ: string(OSS.AclPublicRead)}
+	input.Headers = map[string]string{oss.HEADER_ACL_AMZ: string(oss.AclPublicRead)}
 	output, err := sample.OSSClient.CreateSignedUrl(input)
 	if err != nil {
 		panic(err)
@@ -265,7 +265,7 @@ func (sample TemporarySignatureSample) DoObjectAcl() {
 	fmt.Printf("Set object acl:%s successfully!\n", sample.objectKey)
 	fmt.Println()
 
-	input.Method = OSS.HttpMethodGet
+	input.Method = oss.HttpMethodGet
 	output, err = sample.OSSClient.CreateSignedUrl(input)
 	if err != nil {
 		panic(err)
@@ -287,8 +287,8 @@ func (sample TemporarySignatureSample) DoObjectAcl() {
 }
 
 func (sample TemporarySignatureSample) DeleteObject() {
-	input := &OSS.CreateSignedUrlInput{}
-	input.Method = OSS.HttpMethodDelete
+	input := &oss.CreateSignedUrlInput{}
+	input.Method = oss.HttpMethodDelete
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	input.Expires = 3600
@@ -308,8 +308,8 @@ func (sample TemporarySignatureSample) DeleteObject() {
 }
 
 func (sample TemporarySignatureSample) DeleteBucket() {
-	input := &OSS.CreateSignedUrlInput{}
-	input.Method = OSS.HttpMethodDelete
+	input := &oss.CreateSignedUrlInput{}
+	input.Method = oss.HttpMethodDelete
 	input.Bucket = sample.bucketName
 	input.Expires = 3600
 	output, err := sample.OSSClient.CreateSignedUrl(input)

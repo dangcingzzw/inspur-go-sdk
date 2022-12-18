@@ -12,16 +12,16 @@
 
 /**
  * This sample demonstrates how to download an object concurrently
- * from OSS using the OSS SDK for Go.
+ * from oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"errors"
 	"fmt"
 	"math/rand"
 	"os"
+	"oss"
 	"path/filepath"
 	"sync"
 	"time"
@@ -31,11 +31,11 @@ type ConcurrentDownloadObjectSample struct {
 	bucketName string
 	objectKey  string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newConcurrentDownloadObjectSample(ak, sk, endpoint, bucketName, objectKey, location string) *ConcurrentDownloadObjectSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint, OSS.WithPathStyle(true))
+	OSSClient, err := oss.New(ak, sk, endpoint, oss.WithPathStyle(true))
 	if err != nil {
 		panic(err)
 	}
@@ -43,7 +43,7 @@ func newConcurrentDownloadObjectSample(ak, sk, endpoint, bucketName, objectKey, 
 }
 
 func (sample ConcurrentDownloadObjectSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -97,7 +97,7 @@ func (sample ConcurrentDownloadObjectSample) createSampleFile(sampleFilePath str
 }
 
 func (sample ConcurrentDownloadObjectSample) PutFile(sampleFilePath string) {
-	input := &OSS.PutFileInput{}
+	input := &oss.PutFileInput{}
 	input.Bucket = sample.bucketName
 	input.Key = sample.objectKey
 	input.SourceFile = sampleFilePath
@@ -116,7 +116,7 @@ func (sample ConcurrentDownloadObjectSample) checkError(err error) {
 func (sample ConcurrentDownloadObjectSample) DoConcurrentDownload(sampleFilePath string) {
 
 	// Get size of the object
-	getObjectMetadataInput := &OSS.GetObjectMetadataInput{}
+	getObjectMetadataInput := &oss.GetObjectMetadataInput{}
 	getObjectMetadataInput.Bucket = sample.bucketName
 	getObjectMetadataInput.Key = sample.objectKey
 	getObjectMetadataOutput, err := sample.OSSClient.GetObjectMetadata(getObjectMetadataInput)
@@ -161,7 +161,7 @@ func (sample ConcurrentDownloadObjectSample) DoConcurrentDownload(sampleFilePath
 		}
 		go func(start, end int64, num int) {
 			defer wg.Done()
-			getObjectInput := &OSS.GetObjectInput{}
+			getObjectInput := &oss.GetObjectInput{}
 			getObjectInput.Bucket = sample.bucketName
 			getObjectInput.Key = sample.objectKey
 			getObjectInput.RangeStart = start

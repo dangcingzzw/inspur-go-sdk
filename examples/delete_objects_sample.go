@@ -12,13 +12,13 @@
 
 /**
  * This sample demonstrates how to delete objects under specified bucket
- * from OSS using the OSS SDK for Go.
+ * from oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"fmt"
+	"oss"
 	"strconv"
 	"strings"
 )
@@ -30,11 +30,11 @@ const (
 type DeleteObjectsSample struct {
 	bucketName string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newDeleteObjectsSample(ak, sk, endpoint, bucketName, location string) *DeleteObjectsSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -42,7 +42,7 @@ func newDeleteObjectsSample(ak, sk, endpoint, bucketName, location string) *Dele
 }
 
 func (sample DeleteObjectsSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -57,7 +57,7 @@ func (sample DeleteObjectsSample) BatchPutObjects() {
 	content := "Thank you for using Object Storage Service"
 	keyPrefix := MyObjectKey
 
-	input := &OSS.PutObjectInput{}
+	input := &oss.PutObjectInput{}
 	input.Bucket = sample.bucketName
 	input.Body = strings.NewReader(content)
 	for i := 0; i < 100; i++ {
@@ -71,17 +71,17 @@ func (sample DeleteObjectsSample) BatchPutObjects() {
 }
 
 func (sample DeleteObjectsSample) BatchDeleteObjects() {
-	input := &OSS.ListObjectsInput{}
+	input := &oss.ListObjectsInput{}
 	input.Bucket = sample.bucketName
 	output, err := sample.OSSClient.ListObjects(input)
 	if err != nil {
 		panic(err)
 	}
-	objects := make([]OSS.ObjectToDelete, 0, len(output.Contents))
+	objects := make([]oss.ObjectToDelete, 0, len(output.Contents))
 	for _, content := range output.Contents {
-		objects = append(objects, OSS.ObjectToDelete{Key: content.Key})
+		objects = append(objects, oss.ObjectToDelete{Key: content.Key})
 	}
-	deleteObjectsInput := &OSS.DeleteObjectsInput{}
+	deleteObjectsInput := &oss.DeleteObjectsInput{}
 	deleteObjectsInput.Bucket = sample.bucketName
 	deleteObjectsInput.Objects = objects[:]
 	deleteObjectsOutput, err := sample.OSSClient.DeleteObjects(deleteObjectsInput)

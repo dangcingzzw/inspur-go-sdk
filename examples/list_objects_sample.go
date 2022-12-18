@@ -12,13 +12,13 @@
 
 /**
  * This sample demonstrates how to list objects under specified bucket
- * from OSS using the OSS SDK for Go.
+ * from oss using the oss SDK for Go.
  */
 package examples
 
 import (
-	"OSS"
 	"fmt"
+	"oss"
 	"strconv"
 	"strings"
 )
@@ -26,11 +26,11 @@ import (
 type ListObjectsSample struct {
 	bucketName string
 	location   string
-	OSSClient  *OSS.OSSClient
+	OSSClient  *oss.OSSClient
 }
 
 func newListObjectsSample(ak, sk, endpoint, bucketName, location string) *ListObjectsSample {
-	OSSClient, err := OSS.New(ak, sk, endpoint)
+	OSSClient, err := oss.New(ak, sk, endpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +38,7 @@ func newListObjectsSample(ak, sk, endpoint, bucketName, location string) *ListOb
 }
 
 func (sample ListObjectsSample) CreateBucket() {
-	input := &OSS.CreateBucketInput{}
+	input := &oss.CreateBucketInput{}
 	input.Bucket = sample.bucketName
 	input.Location = sample.location
 	_, err := sample.OSSClient.CreateBucket(input)
@@ -53,9 +53,9 @@ func (sample ListObjectsSample) DoInsertObjects() []string {
 
 	keyPrefix := "MyObjectKey"
 
-	input := &OSS.PutObjectInput{}
+	input := &oss.PutObjectInput{}
 	input.Bucket = sample.bucketName
-	input.Body = strings.NewReader("Hello OSS")
+	input.Body = strings.NewReader("Hello oss")
 	keys := make([]string, 0, 100)
 	for i := 0; i < 100; i++ {
 		input.Key = keyPrefix + strconv.Itoa(i)
@@ -71,7 +71,7 @@ func (sample ListObjectsSample) DoInsertObjects() []string {
 }
 
 func (sample ListObjectsSample) ListObjects() {
-	input := &OSS.ListObjectsInput{}
+	input := &oss.ListObjectsInput{}
 	input.Bucket = sample.bucketName
 	output, err := sample.OSSClient.ListObjects(input)
 	if err != nil {
@@ -85,7 +85,7 @@ func (sample ListObjectsSample) ListObjects() {
 }
 
 func (sample ListObjectsSample) ListObjectsByMarker() {
-	input := &OSS.ListObjectsInput{}
+	input := &oss.ListObjectsInput{}
 	input.Bucket = sample.bucketName
 	input.MaxKeys = 10
 	output, err := sample.OSSClient.ListObjects(input)
@@ -116,7 +116,7 @@ func (sample ListObjectsSample) ListObjectsByPage() {
 
 	pageSize := 10
 	pageNum := 1
-	input := &OSS.ListObjectsInput{}
+	input := &oss.ListObjectsInput{}
 	input.Bucket = sample.bucketName
 	input.MaxKeys = pageSize
 
@@ -142,12 +142,12 @@ func (sample ListObjectsSample) ListObjectsByPage() {
 }
 
 func (sample ListObjectsSample) DeleteObjects(keys []string) {
-	input := &OSS.DeleteObjectsInput{}
+	input := &oss.DeleteObjectsInput{}
 	input.Bucket = sample.bucketName
 
-	objects := make([]OSS.ObjectToDelete, 0, len(keys))
+	objects := make([]oss.ObjectToDelete, 0, len(keys))
 	for _, key := range keys {
-		objects = append(objects, OSS.ObjectToDelete{Key: key})
+		objects = append(objects, oss.ObjectToDelete{Key: key})
 	}
 	input.Objects = objects
 	_, err := sample.OSSClient.DeleteObjects(input)
