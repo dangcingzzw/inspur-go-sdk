@@ -41,7 +41,7 @@ type Initiator struct {
 
 type bucketLocationOSS struct {
 	XMLName  xml.Name `xml:"Location"`
-	Location string   `xml:",chardata"`
+	Location string   `xml:"LocationConstraint,chardata"`
 }
 
 // BucketLocation defines bucket location configuration
