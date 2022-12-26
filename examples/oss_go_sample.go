@@ -1,4 +1,4 @@
-package all_sample
+package main
 
 // 引入依赖包
 import (
@@ -10,52 +10,170 @@ import (
 )
 
 var ak = "*** Provide your Access Key ***"
+
 var sk = "*** Provide your Secret Key ***"
-var endPoint = "your endPoint";
-var bucketName = "your bucketName"
+
+var endpoint = "https://your-endpoint:443"
+
+var bucketName = "my-OSS-bucket-demo"
+
 var objectKey = "your objectKey"
+
 var location = "your location"
 
 // 创建ossClient结构体
-var OSSClient, _ = OSS.New(ak, sk, endPoint)
+var OSSClient, _ = OSS.New(ak, sk, endpoint)
 
 func main() {
 	/**
 	bucket
 	*/
-	createBucket()                //创建桶
-	getBucketLocation()           //获取桶所在区域
-	headBucket()                  //查看桶是否存在
-	listBuckets()                 //桶列表
-	doBucketVersioningOperation() //获取版本-设置版本Enabled-获取版本-设置版本Suspended-获取版本
-	doBucketAclOperation()        //设置只读-查看-设置私有-查看
-	doBucketCorsOperation()       //跨域规则-设置-获取-删除
-	doBucketPolicy()              //桶策略-设置-获取-删除
-	doBucketLifecycleOperation()  //生命周期-设置-获取-删除
-	doBucketWebsiteOperation()    //静态网站设置-获取-删除
-	doBucketVersioning()          //桶版本设置-获取
-	doBucketEncryption()          //桶加密设置-获取-删除
-	deleteBucket()                //删除桶(需要确保桶内没东西）
-	// doBucketDomain();//桶自定义域名设置-获取-删除
-	// pageListBuckets();//分页获取桶列表
+	//createBucket()                //创建桶
+	//getBucketLocation()           //获取桶所在区域
+	//headBucket()                  //查看桶是否存在
+	//listBuckets()                 //桶列表
+	//doBucketVersioningOperation() //获取版本-设置版本Enabled-获取版本-设置版本Suspended-获取版本
+	//doBucketAclOperation()        //设置只读-查看-设置私有-查看
+	//doBucketCorsOperation()       //跨域规则-设置-获取-删除
+	//doBucketPolicy()              //桶策略-设置-获取-删除
+	//doBucketLifecycleOperation()  //生命周期-设置-获取-删除
+	//doBucketWebsiteOperation()    //静态网站设置-获取-删除
+	//doBucketVersioning()          //桶版本设置-获取
+	//doBucketEncryption()          //桶加密设置-获取-删除
+	//deleteBucket()                //删除桶(需要确保桶内没东西）
+	//doBucketDomain()              //桶自定义域名设置-获取-删除
+	//pageListBuckets()             //分页获取桶列表
 
 	/**
 	object
 	*/
-	createBucket()            //创建桶
-	doObjectSampleOperation() //对象上传-获取元数据，下载对象,对象ACL设置-获取,修改元数据，复制对象，删除对象，批量删除对象，列举对象
-	createSignedUrl()         //生成预签名链接
-	doObjectAcl()             //对象ACL设置-获取
-	doPartUpload()            //分片上传-初始化任务-上传分片-完成上传
-	listMultipartUploads()    //分片上传任务列表
-	listParts()               //分片列表
-	aboutMultipartUpload()    //取消分片上传
+	//createBucket()            //创建桶
 
-	//appendObject() //追加对象
-	//doesObjectExist();//判断对象是否存在
-	//doObjectVersion()//对象版本获取-删除
+	//doObjectSampleOperation() //对象上传-获取元数据，下载对象,对象ACL设置-获取,修改元数据，复制对象，删除对象，批量删除对象，列举对象
+	//createSignedUrl()         //生成预签名链接
+	//doObjectAcl()             //对象ACL设置-获取
+	//doPartUpload()            //分片上传-初始化任务-上传分片-完成上传
+	//listMultipartUploads()    //分片上传任务列表
+	//listParts()               //分片列表
+	//aboutMultipartUpload()    //取消分片上传
+
+	appendObject() //追加对象
+	//headObject() //对象是否存在
+	//doObjectVersion() //对象版本获取-删除
+}
+func doObjectVersion() {
+	input := &OSS.ListVersionsInput{}
+	input.Bucket = bucketName
+	output, err := OSSClient.ListVersions(input)
+	if err == nil {
+		fmt.Printf("RequestId:%s\n", output.RequestId)
+		fmt.Printf("Versions:%s\n", output.Versions)
+	} else {
+		if error, ok := err.(OSS.OSSError); ok {
+			fmt.Println(error.Code)
+			fmt.Println(error.Message)
+		} else {
+			fmt.Println(err)
+		}
+	}
+
+	input2 := &OSS.DeleteObjectInput{}
+	input2.Bucket = bucketName
+	input2.Key = objectKey
+	input2.VersionId = "cf967d180c7a5f49\n4df26fc890fb1138-2"
+	output2, err2 := OSSClient.DeleteObject(input2)
+	if err == nil {
+		fmt.Printf("RequestId:%s\n", output2.RequestId)
+	} else {
+		if error, ok := err2.(OSS.OSSError); ok {
+			fmt.Println(error.Code)
+			fmt.Println(error.Message)
+		} else {
+			fmt.Println(err)
+		}
+	}
+
+}
+func headObject() {
+	input := &OSS.HeadObjectInput{}
+	input.Bucket = bucketName
+	input.Key = objectKey
+	_, err := OSSClient.HeadObject(input)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Head object:%s successfully!\n", objectKey)
+	fmt.Println()
+
+}
+func doBucketDomain() {
+	fmt.Printf("set bucket domain - %s")
+	input := &OSS.SetBucketDomainInput{}
+	input.Bucket = bucketName
+	input.Domain = "[{\"domainName\":\"www.example254313.com\",\"isWebsite\":false},{\"domainName\":\"www.example23412.com\",\"isWebsite\":false}]"
+
+	output, err := OSSClient.SetBucketDomain(input)
+	if err == nil {
+		fmt.Printf("RequestId:%s\n", output.RequestId)
+	} else {
+		if error, ok := err.(OSS.OSSError); ok {
+			fmt.Println(error.Code)
+			fmt.Println(error.Message)
+		} else {
+			fmt.Println(err)
+		}
+	}
+	fmt.Printf("get bucket domain - %s")
+	output2, err2 := OSSClient.GetBucketDomain(bucketName)
+	if err2 == nil {
+		fmt.Printf("RequestId:%s\n", output2.RequestId)
+		fmt.Printf("domain:%s\n", output2.Domain)
+	} else {
+		if error, ok := err2.(OSS.OSSError); ok {
+			fmt.Println(error.Code)
+			fmt.Println(error.Message)
+		} else {
+			fmt.Println(err2)
+		}
+	}
+	fmt.Printf("delete bucket domain - %s")
+	output3, err3 := OSSClient.DeleteBucketDomain(bucketName)
+	if err3 == nil {
+		fmt.Printf("RequestId:%s\n", output3.RequestId)
+	} else {
+		if err, ok := err3.(OSS.OSSError); ok {
+			fmt.Println(err.Code)
+			fmt.Println(err.Message)
+		} else {
+			fmt.Println(err)
+		}
+	}
+
 }
 
+func pageListBuckets() {
+	input := &OSS.PageListBucketsInput{}
+	input.PageNo = "1"
+	input.PageSize = "2"
+	output, err := OSSClient.PageListBuckets(input)
+	if err == nil {
+		fmt.Printf("RequestId:%s\n", output.RequestId)
+		for index, bucket := range output.Buckets {
+			fmt.Printf("index[%d]\n", index)
+			fmt.Printf(bucket.Name)
+		}
+		print("pageNo:", output.PageNo)
+		print("pageSize:", output.PageSize)
+		print("TotalCount:", output.TotalCount)
+	} else {
+		if obsError, ok := err.(OSS.OSSError); ok {
+			fmt.Println(obsError.Code)
+			fmt.Println(obsError.Message)
+		} else {
+			fmt.Println(err)
+		}
+	}
+}
 func aboutMultipartUpload() {
 	input := &OSS.AbortMultipartUploadInput{}
 	input.Bucket = bucketName
@@ -231,7 +349,7 @@ func doObjectAcl() {
 	input2 := &OSS.SetObjectAclInput{}
 	input2.Bucket = bucketName
 	input2.Key = objectKey
-	input2.ACL = OSS.AclPublicRead
+	input2.ACL = OSS.AclPublicReadWrite
 
 	_, err2 := OSSClient.SetObjectAcl(input2)
 	if err2 != nil {
@@ -276,7 +394,7 @@ func createSignedUrl() {
 func appendObject() {
 	input := &OSS.AppendObjectInput{}
 	input.Bucket = bucketName
-	input.Key = objectKey + "11a"
+	input.Key = objectKey + "z1"
 	// 第一次追加上传，指定传入追加上传位置为0
 	input.Position = 0
 	input.Body = strings.NewReader("Hello OBS")
@@ -284,25 +402,6 @@ func appendObject() {
 	if err == nil {
 		fmt.Printf("RequestId:%s\n", output.RequestId)
 		fmt.Printf("NextAppendPosition:%d\n", output.NextAppendPosition)
-
-		// 第二次追加上传，指定传入追加上传位置为上次追加上传返回的位置信息
-		input := &OSS.AppendObjectInput{}
-		input.Bucket = bucketName
-		input.Key = objectKey + "11a"
-		input.Position = output.NextAppendPosition
-		input.Body = strings.NewReader("Hello OBS Again")
-		output, err := OSSClient.AppendObject(input)
-		if err == nil {
-			fmt.Printf("RequestId:%s\n", output.RequestId)
-			fmt.Printf("NextAppendPosition:%d\n", output.NextAppendPosition)
-		} else {
-			if obsError, ok := err.(OSS.OSSError); ok {
-				fmt.Println(obsError.Code)
-				fmt.Println(obsError.Message)
-			} else {
-				fmt.Println(err)
-			}
-		}
 	} else {
 		if obsError, ok := err.(OSS.OSSError); ok {
 			fmt.Println(obsError.Code)
@@ -562,7 +661,7 @@ func doBucketPolicy() {
 	fmt.Printf("set bucket policy - %s")
 	input := &OSS.SetBucketPolicyInput{}
 	input.Bucket = bucketName
-	input.Policy = "{\"Statement\":[{\"Principal\":\"*\",\"Effect\":\"Allow\",\"Action\":\"ListBucket\",\"Resource\":\"" + bucketName + "\"}]}"
+	input.Policy = "{\"Statement\":[{\"Principal\":\"*\",\"Effect\":\"Allow\",\"Action\":\"s3:ListBucket\",\"Resource\":\"" + bucketName + "\"}]}"
 	output, err := OSSClient.SetBucketPolicy(input)
 	if err == nil {
 		fmt.Printf("RequestId:%s\n", output.RequestId)
@@ -709,43 +808,25 @@ func doBucketLifecycleOperation() {
 	input := &OSS.SetBucketLifecycleConfigurationInput{}
 	input.Bucket = bucketName
 
-	var lifecycleRules [2]OSS.LifecycleRule
+	var lifecycleRules [1]OSS.LifecycleRule
 	lifecycleRule0 := OSS.LifecycleRule{}
-	lifecycleRule0.ID = "rule0"
-	lifecycleRule0.Prefix = "prefix0"
+	lifecycleRule0.ID = "delete OSSoleted files"
+	lifecycleRule0.Prefix = "OSSoleted/"
 	lifecycleRule0.Status = OSS.RuleStatusEnabled
-
-	var transitions [2]OSS.Transition
-	transitions[0] = OSS.Transition{}
-	transitions[0].Days = 30
-	transitions[0].StorageClass = OSS.StorageClassWarm
-
-	transitions[1] = OSS.Transition{}
-	transitions[1].Days = 60
-	transitions[1].StorageClass = OSS.StorageClassCold
-	lifecycleRule0.Transitions = transitions[:]
-
 	lifecycleRule0.Expiration.Days = 100
-	lifecycleRule0.NoncurrentVersionExpiration.NoncurrentDays = 20
 
 	lifecycleRules[0] = lifecycleRule0
 
 	lifecycleRule1 := OSS.LifecycleRule{}
+	lifecycleRule1.ID = "delete temporary files"
+	lifecycleRule1.Prefix = "temporary/"
 	lifecycleRule1.Status = OSS.RuleStatusEnabled
-	lifecycleRule1.ID = "rule1"
-	lifecycleRule1.Prefix = "prefix1"
 	lifecycleRule1.Expiration.Date = time.Now().Add(time.Duration(24) * time.Hour)
 
-	var noncurrentTransitions [2]OSS.NoncurrentVersionTransition
-	noncurrentTransitions[0] = OSS.NoncurrentVersionTransition{}
-	noncurrentTransitions[0].NoncurrentDays = 30
-	noncurrentTransitions[0].StorageClass = OSS.StorageClassWarm
-
-	noncurrentTransitions[1] = OSS.NoncurrentVersionTransition{}
-	noncurrentTransitions[1].NoncurrentDays = 60
-	noncurrentTransitions[1].StorageClass = OSS.StorageClassCold
-	lifecycleRule1.NoncurrentVersionTransitions = noncurrentTransitions[:]
-	lifecycleRules[1] = lifecycleRule1
+	//lifecycleRule1 := OSS.LifecycleRule{}
+	//lifecycleRule1.ID = "delete temporary files"
+	//lifecycleRule1.Prefix = "temporary/"
+	//lifecycleRule1.Status = OSS.RuleStatusEnabled
 
 	input.LifecycleRules = lifecycleRules[:]
 
@@ -919,26 +1000,21 @@ func doBucketVersioningOperation() {
 	fmt.Println()
 }
 func listBuckets() {
-	input := &OSS.CreateSignedUrlInput{}
-	input.Method = OSS.HttpMethodGet
-	input.Expires = 3600
-	output, err := OSSClient.CreateSignedUrl(input)
-	if err != nil {
-		panic(err)
+	output, err := OSSClient.ListBuckets(nil)
+	if err == nil {
+		fmt.Printf("RequestId:%s\n", output.RequestId)
+		fmt.Printf("Owner.ID:%s\n", output.Owner.ID)
+		for index, val := range output.Buckets {
+			fmt.Printf("Bucket[%d]-Name:%s,CreationDate:%s\n", index, val.Name, val.CreationDate)
+		}
+	} else {
+		if OSSError, ok := err.(OSS.OSSError); ok {
+			fmt.Println(OSSError.Code)
+			fmt.Println(OSSError.Message)
+		} else {
+			fmt.Println(err)
+		}
 	}
-	fmt.Printf("%s using temporary signature url:\n", "ListBuckets")
-	fmt.Println(output.SignedUrl)
-
-	listBucketsOutput, err := OSSClient.ListBucketsWithSignedUrl(output.SignedUrl, output.ActualSignedRequestHeaders)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("Owner.DisplayName:%s, Owner.ID:%s\n", listBucketsOutput.Owner.DisplayName, listBucketsOutput.Owner.ID)
-	for index, val := range listBucketsOutput.Buckets {
-		fmt.Printf("Bucket[%d]-Name:%s,CreationDate:%s\n", index, val.Name, val.CreationDate)
-	}
-	fmt.Println()
 }
 func getBucketLocation() {
 	output, err := OSSClient.GetBucketLocation(bucketName)

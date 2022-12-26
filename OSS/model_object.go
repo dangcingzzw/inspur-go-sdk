@@ -204,9 +204,35 @@ type GetObjectInput struct {
 	ResponseContentType        string
 	ResponseExpires            string
 }
+type DoesObjectExistInput struct {
+	GetObjectMetadataInput
+	IfMatch                    string
+	IfNoneMatch                string
+	IfUnmodifiedSince          time.Time
+	IfModifiedSince            time.Time
+	RangeStart                 int64
+	RangeEnd                   int64
+	ImageProcess               string
+	ResponseCacheControl       string
+	ResponseContentDisposition string
+	ResponseContentEncoding    string
+	ResponseContentLanguage    string
+	ResponseContentType        string
+	ResponseExpires            string
+}
 
 // GetObjectOutput is the result of GetObject function
 type GetObjectOutput struct {
+	GetObjectMetadataOutput
+	DeleteMarker       bool
+	CacheControl       string
+	ContentDisposition string
+	ContentEncoding    string
+	ContentLanguage    string
+	Expires            string
+	Body               io.ReadCloser
+}
+type DoesObjectExistOutput struct {
 	GetObjectMetadataOutput
 	DeleteMarker       bool
 	CacheControl       string

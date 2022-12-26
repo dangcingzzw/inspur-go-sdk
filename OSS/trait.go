@@ -109,7 +109,25 @@ func (input ListBucketsInput) trans(isOSS bool) (params map[string]string, heade
 	}
 	return
 }
+func (input PageListBucketsInput) trans(isOSS bool) (params map[string]string, headers map[string][]string, data interface{}, err error) {
+	params = map[string]string{string(SubResourceDetail): ""}
 
+	if input.QueryLocation && !isOSS {
+		setHeaders(headers, HEADER_LOCATION_AMZ, []string{"true"}, isOSS)
+	}
+	if input.BucketType != "" {
+		setHeaders(headers, HEADER_BUCKET_TYPE, []string{string(input.BucketType)}, true)
+	}
+
+	if input.PageNo != "" {
+		params[PARAM_PAGE_NO] = input.PageNo
+	}
+	if input.PageSize != "" {
+		params[PARAM_PAGE_SIZE] = input.PageSize
+	}
+
+	return
+}
 func (input CreateBucketInput) prepareGrantHeaders(headers map[string][]string, isOSS bool) {
 	if grantReadID := input.GrantReadId; grantReadID != "" {
 		setHeaders(headers, HEADER_GRANT_READ_OSS, []string{grantReadID}, isOSS)
@@ -295,6 +313,11 @@ func (input SetBucketPolicyInput) trans(isOSS bool) (params map[string]string, h
 	return
 }
 
+func (input SetBucketDomainInput) trans(isOSS bool) (params map[string]string, headers map[string][]string, data interface{}, err error) {
+	params = map[string]string{string(SubResourceDomain): ""}
+	data = strings.NewReader(input.Domain)
+	return
+}
 func (input SetBucketCorsInput) trans(isOSS bool) (params map[string]string, headers map[string][]string, data interface{}, err error) {
 	params = map[string]string{string(SubResourceCors): ""}
 	data, md5, err := ConvertRequestToIoReaderV2(input)

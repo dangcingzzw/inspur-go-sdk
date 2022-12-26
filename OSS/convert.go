@@ -833,6 +833,27 @@ func ParseGetObjectOutput(output *GetObjectOutput) {
 		output.Expires = ret[0]
 	}
 }
+func ParseDoesObjectExistOutput(output *DoesObjectExistOutput) {
+	ParseGetObjectMetadataOutput(&output.GetObjectMetadataOutput)
+	if ret, ok := output.ResponseHeaders[HEADER_DELETE_MARKER]; ok {
+		output.DeleteMarker = ret[0] == "true"
+	}
+	if ret, ok := output.ResponseHeaders[HEADER_CACHE_CONTROL]; ok {
+		output.CacheControl = ret[0]
+	}
+	if ret, ok := output.ResponseHeaders[HEADER_CONTENT_DISPOSITION]; ok {
+		output.ContentDisposition = ret[0]
+	}
+	if ret, ok := output.ResponseHeaders[HEADER_CONTENT_ENCODING]; ok {
+		output.ContentEncoding = ret[0]
+	}
+	if ret, ok := output.ResponseHeaders[HEADER_CONTENT_LANGUAGE]; ok {
+		output.ContentLanguage = ret[0]
+	}
+	if ret, ok := output.ResponseHeaders[HEADER_EXPIRES]; ok {
+		output.Expires = ret[0]
+	}
+}
 
 // ConvertRequestToIoReaderV2 converts req to XML data
 func ConvertRequestToIoReaderV2(req interface{}) (io.Reader, string, error) {
@@ -885,6 +906,8 @@ func ParseResponseToBaseModel(resp *http.Response, baseModel IBaseModel, xmlResu
 			} else {
 				s := reflect.TypeOf(baseModel).Elem()
 				if reflect.TypeOf(baseModel).Elem().Name() == "GetBucketPolicyOutput" {
+					parseBucketPolicyOutput(s, baseModel, body)
+				} else if reflect.TypeOf(baseModel).Elem().Name() == "GetBucketDomainOutput" {
 					parseBucketPolicyOutput(s, baseModel, body)
 				} else {
 					err = parseJSON(body, baseModel)

@@ -46,6 +46,7 @@ func (OSSClient OSSClient) doAuthTemporary(method, bucketName, objectKey string,
 		doLog(LEVEL_WARN, "No ak/sk provided, skip to construct authorization")
 	} else {
 		if isV4 {
+
 			date, parseDateErr := time.Parse(RFC1123_FORMAT, headers[HEADER_DATE_CAMEL][0])
 			if parseDateErr != nil {
 				doLog(LEVEL_WARN, "Failed to parse date with reason: %v", parseDateErr)
@@ -249,7 +250,6 @@ func attachHeaders(headers map[string][]string, isOSS bool) string {
 	length := len(headers)
 	_headers := make(map[string][]string, length)
 	keys := make([]string, 0, length)
-
 	for key, value := range headers {
 		_key := strings.ToLower(strings.TrimSpace(key))
 		if _key != "" {

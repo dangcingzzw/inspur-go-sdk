@@ -107,10 +107,10 @@ func (OSSClient OSSClient) doAction(action, method, bucketName, objectKey string
 	start := GetCurrentTimestamp()
 
 	params, headers, data, err := input.trans(OSSClient.conf.signature == SignatureOSS)
+
 	if err != nil {
 		return err
 	}
-
 	if params == nil {
 		params = make(map[string]string)
 	}
@@ -129,7 +129,6 @@ func (OSSClient OSSClient) doAction(action, method, bucketName, objectKey string
 			doLog(LEVEL_INFO, "Unsupported extensionOptions")
 		}
 	}
-
 	switch method {
 	case HTTP_GET:
 		resp, respError = OSSClient.doHTTPGet(bucketName, objectKey, params, headers, data, repeatable)
@@ -475,7 +474,6 @@ func (OSSClient OSSClient) doHTTP(method, bucketName, objectKey string, params m
 	bucketName = strings.TrimSpace(bucketName)
 
 	method = strings.ToUpper(method)
-
 	var redirectURL string
 	var requestURL string
 	maxRetryCount := OSSClient.conf.maxRetryCount
@@ -494,7 +492,6 @@ func (OSSClient OSSClient) doHTTP(method, bucketName, objectKey string, params m
 		if err != nil {
 			return nil, err
 		}
-
 		logHeaders(headers, OSSClient.conf.signature)
 
 		lastRequest = prepareReq(headers, req, lastRequest, OSSClient.conf.userAgent)
@@ -502,7 +499,7 @@ func (OSSClient OSSClient) doHTTP(method, bucketName, objectKey string, params m
 		start := GetCurrentTimestamp()
 		resp, err = OSSClient.httpClient.Do(req)
 		doLog(LEVEL_INFO, "Do http request cost %d ms", (GetCurrentTimestamp() - start))
-
+		//fmt.Printf("resp:%s", resp)
 		var msg interface{}
 		if err != nil {
 			msg = err

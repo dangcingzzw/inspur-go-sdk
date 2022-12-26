@@ -128,6 +128,9 @@ const (
 	HEADER_CONTENT_LANGUAGE_CAMEL              = "Content-Language"
 	HEADER_EXPIRES_CAMEL                       = "Expires"
 
+	PARAM_PAGE_NO   = "pageNo"
+	PARAM_PAGE_SIZE = "pageSize"
+
 	PARAM_VERSION_ID                   = "versionId"
 	PARAM_RESPONSE_CONTENT_TYPE        = "response-content-type"
 	PARAM_RESPONSE_CONTENT_LANGUAGE    = "response-content-language"
@@ -239,6 +242,7 @@ var (
 		"backtosource":                 true,
 		"metadata":                     true,
 		"policy":                       true,
+		"domain":                       true,
 		"torrent":                      true,
 		"logging":                      true,
 		"location":                     true,
@@ -702,8 +706,14 @@ const (
 	// SubResourceAcl subResource value: acl
 	SubResourceAcl SubResourceType = "acl"
 
+	// SubResourceDetail subResource value: detail
+	SubResourceDetail SubResourceType = "details"
+
 	// SubResourcePolicy subResource value: policy
 	SubResourcePolicy SubResourceType = "policy"
+
+	// SubResourceDomain
+	SubResourceDomain SubResourceType = "domain"
 
 	// SubResourceCors subResource value: cors
 	SubResourceCors SubResourceType = "cors"

@@ -231,6 +231,19 @@ func (OSSClient OSSClient) GetObject(input *GetObjectInput, extensions ...extens
 	}
 	return
 }
+func (OSSClient OSSClient) DoesObjectExist(input *DoesObjectExistInput, extensions ...extensionOptions) (output *DoesObjectExistOutput, err error) {
+	if input == nil {
+		return nil, errors.New("DoesObjectExistInput is nil")
+	}
+	output = &DoesObjectExistOutput{}
+	err = OSSClient.doActionWithBucketAndKey("DoesObjectExist", HTTP_GET, input.Bucket, input.Key, input, output, extensions)
+	if err != nil {
+		output = nil
+	} else {
+		ParseDoesObjectExistOutput(output)
+	}
+	return
+}
 
 // PutObject uploads an object to the specified bucket.
 func (OSSClient OSSClient) PutObject(input *PutObjectInput, extensions ...extensionOptions) (output *PutObjectOutput, err error) {
@@ -389,13 +402,11 @@ func (OSSClient OSSClient) AppendObject(input *AppendObjectInput, extensions ...
 	if input == nil {
 		return nil, errors.New("AppendObjectInput is nil")
 	}
-
 	if input.ContentType == "" && input.Key != "" {
 		if contentType, ok := mimeTypes[strings.ToLower(input.Key[strings.LastIndex(input.Key, ".")+1:])]; ok {
 			input.ContentType = contentType
 		}
 	}
-	output = &AppendObjectOutput{}
 	var repeatable bool
 	if input.Body != nil {
 		if _, ok := input.Body.(*strings.Reader); !ok {
@@ -405,10 +416,11 @@ func (OSSClient OSSClient) AppendObject(input *AppendObjectInput, extensions ...
 			input.Body = &readerWrapper{reader: input.Body, totalCount: input.ContentLength}
 		}
 	}
+	fmt.Printf("re:%s", repeatable)
 	if repeatable {
-		err = OSSClient.doActionWithBucketAndKey("AppendObject", HTTP_POST, input.Bucket, input.Key, input, output, extensions)
+		err = OSSClient.doActionWithBucketAndKey("AppendObject", HTTP_PUT, input.Bucket, input.Key, input, output, extensions)
 	} else {
-		err = OSSClient.doActionWithBucketAndKeyUnRepeatable("AppendObject", HTTP_POST, input.Bucket, input.Key, input, output, extensions)
+		err = OSSClient.doActionWithBucketAndKey("AppendObject", HTTP_PUT, input.Bucket, input.Key, input, output, extensions)
 	}
 	if err != nil {
 		output = nil

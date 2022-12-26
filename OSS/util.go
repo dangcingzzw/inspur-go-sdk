@@ -347,6 +347,7 @@ func GetV2Authorization(ak, sk, method, bucketName, objectKey, queryURL string, 
 		urlHolder: &urlHolder{scheme: "https", host: "dummy", port: 443},
 		pathStyle: pathStyle}
 	conf.signature = SignatureOSS
+
 	_, canonicalizedURL := conf.formatUrls(bucketName, objectKey, params, false)
 	ret = v2Auth(ak, sk, method, canonicalizedURL, headers, true)
 	v2HashPrefix := OSS_HASH_PREFIX

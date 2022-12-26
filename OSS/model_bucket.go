@@ -21,12 +21,30 @@ type ListBucketsInput struct {
 	BucketType    BucketType
 }
 
+// PageListBucketsInput is the input parameter of ListBuckets function
+type PageListBucketsInput struct {
+	QueryLocation bool
+	BucketType    BucketType
+	PageNo        string
+	PageSize      string
+}
+
 // ListBucketsOutput is the result of ListBuckets function
 type ListBucketsOutput struct {
 	BaseModel
 	XMLName xml.Name `xml:"ListAllMyBucketsResult"`
 	Owner   Owner    `xml:"Owner"`
 	Buckets []Bucket `xml:"Buckets>Bucket"`
+}
+
+type PageListBucketsOutput struct {
+	BaseModel
+	XMLName    xml.Name `xml:"ListAllMyBucketsResult"`
+	Owner      Owner    `xml:"Owner"`
+	Buckets    []Bucket `xml:"Buckets>Bucket"`
+	PageNo     string   `xml:"PageNo"`
+	PageSize   string   `xml:"PageSize"`
+	TotalCount string   `xml:"TotalCount"`
 }
 
 // CreateBucketInput is the input parameter of CreateBucket function
@@ -128,10 +146,19 @@ type SetBucketPolicyInput struct {
 	Policy string
 }
 
+type SetBucketDomainInput struct {
+	Bucket string
+	Domain string
+}
+
 // GetBucketPolicyOutput is the result of GetBucketPolicy function
 type GetBucketPolicyOutput struct {
 	BaseModel
 	Policy string `json:"body"`
+}
+type GetBucketDomainOutput struct {
+	BaseModel
+	Domain string `json:"body"`
 }
 
 // SetBucketCorsInput is the input parameter of SetBucketCors function
@@ -363,3 +390,13 @@ type GetBucketFSStatusOutput struct {
 	GetBucketMetadataOutput
 	FSStatus FSStatusType
 }
+
+//type SetBucketDomainInput struct {
+//	Bucket string `xml:"-"`
+//	BucketDomainConfiguration
+//}
+//
+//type GetBucketDomainOutput struct {
+//	BaseModel
+//	BucketEncryptionConfiguration
+//}

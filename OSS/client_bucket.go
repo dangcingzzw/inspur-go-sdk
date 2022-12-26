@@ -33,6 +33,19 @@ func (OSSClient OSSClient) ListBuckets(input *ListBucketsInput, extensions ...ex
 	return
 }
 
+// You can use this API to obtain the bucket page list. In the list, bucket names are displayed in lexicographical order.
+func (OSSClient OSSClient) PageListBuckets(input *PageListBucketsInput, extensions ...extensionOptions) (output *PageListBucketsOutput, err error) {
+	if input == nil {
+		input = &PageListBucketsInput{}
+	}
+	output = &PageListBucketsOutput{}
+	err = OSSClient.doActionWithoutBucket("details", HTTP_GET, input, output, extensions)
+	if err != nil {
+		output = nil
+	}
+	return
+}
+
 // CreateBucket creates a bucket.
 //
 // You can use this API to create a bucket and name it as you specify. The created bucket name must be unique in OSS.
@@ -298,6 +311,17 @@ func (OSSClient OSSClient) SetBucketPolicy(input *SetBucketPolicyInput, extensio
 	}
 	return
 }
+func (OSSClient OSSClient) SetBucketDomain(input *SetBucketDomainInput, extensions ...extensionOptions) (output *BaseModel, err error) {
+	if input == nil {
+		return nil, errors.New("SetBucketDomain is nil")
+	}
+	output = &BaseModel{}
+	err = OSSClient.doActionWithBucket("SetBucketDomain", HTTP_PUT, input.Bucket, input, output, extensions)
+	if err != nil {
+		output = nil
+	}
+	return
+}
 
 // GetBucketPolicy gets the bucket policy.
 //
@@ -310,6 +334,14 @@ func (OSSClient OSSClient) GetBucketPolicy(bucketName string, extensions ...exte
 	}
 	return
 }
+func (OSSClient OSSClient) GetBucketDomain(bucketName string, extensions ...extensionOptions) (output *GetBucketDomainOutput, err error) {
+	output = &GetBucketDomainOutput{}
+	err = OSSClient.doActionWithBucketV2("GetBucketDomain", HTTP_GET, bucketName, newSubResourceSerial(SubResourceDomain), output, extensions)
+	if err != nil {
+		output = nil
+	}
+	return
+}
 
 // DeleteBucketPolicy deletes the bucket policy.
 //
@@ -317,6 +349,15 @@ func (OSSClient OSSClient) GetBucketPolicy(bucketName string, extensions ...exte
 func (OSSClient OSSClient) DeleteBucketPolicy(bucketName string, extensions ...extensionOptions) (output *BaseModel, err error) {
 	output = &BaseModel{}
 	err = OSSClient.doActionWithBucket("DeleteBucketPolicy", HTTP_DELETE, bucketName, newSubResourceSerial(SubResourcePolicy), output, extensions)
+	if err != nil {
+		output = nil
+	}
+	return
+}
+
+func (OSSClient OSSClient) DeleteBucketDomain(bucketName string, extensions ...extensionOptions) (output *BaseModel, err error) {
+	output = &BaseModel{}
+	err = OSSClient.doActionWithBucket("DeleteBucketDomain", HTTP_DELETE, bucketName, newSubResourceSerial(SubResourceDomain), output, extensions)
 	if err != nil {
 		output = nil
 	}

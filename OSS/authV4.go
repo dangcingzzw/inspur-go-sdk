@@ -18,6 +18,7 @@ import (
 )
 
 func getV4StringToSign(method, canonicalizedURL, queryURL, scope, longDate, payload string, signedHeaders []string, headers map[string][]string) string {
+
 	canonicalRequest := make([]string, 0, 10+len(signedHeaders)*4)
 	canonicalRequest = append(canonicalRequest, method)
 	canonicalRequest = append(canonicalRequest, "\n")

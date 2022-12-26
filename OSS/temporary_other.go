@@ -103,7 +103,6 @@ func (OSSClient OSSClient) CreateBrowserBasedSignature(input *CreateBrowserBased
 	} else {
 		signature = Base64Encode(HmacSha1([]byte(sh.sk), []byte(policy)))
 	}
-
 	output = &CreateBrowserBasedSignatureOutput{
 		OriginPolicy: originPolicy,
 		Policy:       policy,

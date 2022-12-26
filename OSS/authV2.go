@@ -17,7 +17,18 @@ import (
 )
 
 func getV2StringToSign(method, canonicalizedURL string, headers map[string][]string, isOSS bool) string {
-	stringToSign := strings.Join([]string{method, "\n", attachHeaders(headers, isOSS), "\n", canonicalizedURL}, "")
+	tmpCanonicalizedURL := canonicalizedURL
+	signParmas := strings.Split(canonicalizedURL, "?")
+
+	if len(signParmas) > 1 {
+		signAppendParam := strings.Split(signParmas[1], "&")
+		if len(signAppendParam) > 0 && signAppendParam[0] == "append" {
+			//重新组中canonicalizedURL
+			tmpCanonicalizedURL = signParmas[0]
+		}
+	}
+
+	stringToSign := strings.Join([]string{method, "\n", attachHeaders(headers, isOSS), "\n", tmpCanonicalizedURL}, "")
 
 	var isSecurityToken bool
 	var securityToken []string
@@ -29,8 +40,8 @@ func getV2StringToSign(method, canonicalizedURL string, headers map[string][]str
 	var query []string
 	if !isSecurityToken {
 		parmas := strings.Split(canonicalizedURL, "?")
+
 		if len(parmas) > 1 {
-			query = strings.Split(parmas[1], "&")
 			for _, value := range query {
 				if strings.HasPrefix(value, HEADER_STS_TOKEN_AMZ+"=") || strings.HasPrefix(value, HEADER_STS_TOKEN_OSS+"=") {
 					if value[len(HEADER_STS_TOKEN_AMZ)+1:] != "" {
@@ -46,6 +57,7 @@ func getV2StringToSign(method, canonicalizedURL string, headers map[string][]str
 		logStringToSign = strings.Replace(logStringToSign, securityToken[0], "******", -1)
 	}
 	doLog(LEVEL_DEBUG, "The v2 auth stringToSign:\n%s", logStringToSign)
+
 	return stringToSign
 }
 
